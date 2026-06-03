@@ -1,7 +1,8 @@
 .PHONY: setup seed seed-large upload bronze bronze-reset ingest \
         dbt-deps dbt-run dbt-run-snowflake dbt-test dbt-docs dbt-build dbt-clean \
         airflow-init airflow-up airflow-down airflow-logs airflow-trigger airflow-backfill \
-        test test-ci lint lint-fix pipeline up down clean help
+        docker-build docker-test docker-test-all docker-pipeline \
+        test test-all test-ci lint lint-fix pipeline up down clean help
 
 # ── Environment ───────────────────────────────────────────────────────────────
 setup:
@@ -52,11 +53,30 @@ dbt-clean:  ## Remove dbt target and dbt_packages directories
 	cd dbt && uv run dbt clean
 
 # ── Testing ───────────────────────────────────────────────────────────────────
-test:
+test:  ## Run unit + bronze tests (fast; excludes integration smoke test)
 	uv run pytest tests/ -v
 
-test-ci:
-	uv run pytest tests/ -v --tb=short --no-header
+test-all:  ## Run every test including the end-to-end smoke test (slow)
+	uv run pytest tests/ -v -m ""
+
+test-ci:  ## CI full test run: unit + integration + short traceback output
+	uv run pytest tests/ -v --tb=short --no-header -m ""
+
+# ── Docker (Phase 6) ──────────────────────────────────────────────────────────
+docker-build:  ## Build the Python app Docker image
+	docker compose -f docker/docker-compose.yml build app
+
+docker-test:  ## Run unit + bronze tests inside the app container
+	docker compose -f docker/docker-compose.yml run --rm app \
+		uv run pytest tests/ -v --tb=short -m "not integration"
+
+docker-test-all:  ## Run all tests (incl. smoke) inside the app container
+	docker compose -f docker/docker-compose.yml run --rm app \
+		uv run pytest tests/ -v --tb=short -m ""
+
+docker-pipeline:  ## Run the full pipeline (seed → bronze → dbt) inside the container
+	docker compose -f docker/docker-compose.yml run --rm app \
+		bash -c "make seed && make bronze-reset && make dbt-build"
 
 # ── Linting ───────────────────────────────────────────────────────────────────
 lint:
@@ -139,7 +159,12 @@ help:
 	@echo "  make airflow-logs   Tail Airflow logs"
 	@echo "  make airflow-trigger Manually trigger the pipeline DAG"
 	@echo "  make airflow-backfill Backfill the pipeline for 2024-01 (demo)"
-	@echo "  make test           Run pytest suite"
+	@echo "  make docker-build   Build the Python app Docker image"
+	@echo "  make docker-test    Run unit tests inside the app container"
+	@echo "  make docker-test-all Run all tests (incl. smoke) in container"
+	@echo "  make docker-pipeline Seed + bronze + dbt inside container"
+	@echo "  make test           Run unit + bronze tests (fast)"
+	@echo "  make test-all       Run all tests incl. integration smoke test"
 	@echo "  make lint           Check code style (ruff, black, sqlfluff)"
 	@echo "  make lint-fix       Auto-fix code style issues"
 	@echo "  make pipeline       Full end-to-end local run"
