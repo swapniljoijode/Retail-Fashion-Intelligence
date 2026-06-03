@@ -1,0 +1,349 @@
+# Fashion Retail Intelligence Platform — Tracker Migration Template
+# Version: 1.0
+# This file is the single source of truth for all project phases and tasks.
+# It seeds the Project Tracker and mirrors the tasks in the project plan.
+# Status values: pending | in_progress | completed | failed | skipped
+
+project:
+  id: fashion-retail-intelligence
+  name: Fashion Retail Intelligence Platform
+  description: End-to-end medallion data engineering platform for fashion retail
+  owner: swapnil-joijode
+  version: "1.0"
+
+phases:
+
+  - id: p0
+    name: Charter and Foundation
+    description: Repository structure, Python environment, quality gates, secrets scaffolding, and project charter
+    milestone: M0
+    definition_of_done: Fresh clone followed by make setup produces a working environment with all hooks passing
+    status: in_progress
+    tasks:
+
+      - id: p0-t1
+        name: Initialize monorepo directory structure
+        description: Create all top-level directories per Section 6 of the project plan
+        status: completed
+
+      - id: p0-t2
+        name: Write pyproject.toml with pinned dependencies
+        description: uv-compatible pyproject.toml covering all project and dev dependencies
+        status: completed
+
+      - id: p0-t3
+        name: Configure pre-commit hooks
+        description: ruff, black, sqlfluff, and conventional commit hooks wired via .pre-commit-config.yaml
+        status: completed
+
+      - id: p0-t4
+        name: Write Makefile
+        description: Single task runner exposing setup, seed, ingest, dbt-run, dbt-test, test, lint, pipeline commands
+        status: completed
+
+      - id: p0-t5
+        name: Configure secrets scaffolding
+        description: .gitignore covers all secret files; .env.example documents all required variables
+        status: completed
+
+      - id: p0-t6
+        name: Author project charter
+        description: Scope, success criteria, out-of-scope items, naming conventions, and five internal customers
+        status: completed
+
+      - id: p0-t7
+        name: Author tracker migration template
+        description: Machine-readable YAML listing every phase and task with stable identifiers
+        status: completed
+
+  - id: p1
+    name: Dimensional Model and Metric Dictionary
+    description: Star schema design, conformed dimensions, fact table grain statements, and metric dictionary
+    milestone: M1
+    definition_of_done: Every mart KPI has a single agreed formula and grain recorded in the metric dictionary
+    status: pending
+    tasks:
+
+      - id: p1-t1
+        name: Document business questions per domain
+        description: One page per domain — marketing, sales, category, product planning, placement
+        status: pending
+
+      - id: p1-t2
+        name: Design conformed dimensions
+        description: dim_product, dim_store, dim_customer, dim_date, dim_channel, dim_promotion with SCD strategy
+        status: pending
+
+      - id: p1-t3
+        name: Design fact tables with grain statements
+        description: fact_sales, fact_inventory_snapshot, fact_returns, fact_web_events, fact_markdown
+        status: pending
+
+      - id: p1-t4
+        name: Write metric dictionary
+        description: Name, definition, formula, grain, owning mart for every KPI
+        status: pending
+
+      - id: p1-t5
+        name: Produce entity relationship diagram
+        description: ERD using dbdiagram.io or Mermaid committed to docs/
+        status: pending
+
+      - id: p1-t6
+        name: Review model against business questions
+        description: Verify every question is answerable; revise if not
+        status: pending
+
+  - id: p2
+    name: Synthetic Data Generation
+    description: Python generators for dimensions and facts with seasonality, dirtiness, and Parquet output
+    milestone: M2
+    definition_of_done: Generator produces referentially consistent Parquet at two volumes with passing tests and a fixed seed
+    status: pending
+    tasks:
+
+      - id: p2-t1
+        name: Build fashion taxonomy
+        description: Hand-seeded category, subcategory, brand, color, size, and season reference data
+        status: pending
+
+      - id: p2-t2
+        name: Build dimension generators
+        description: Faker-based generators for all six conformed dimensions
+        status: pending
+
+      - id: p2-t3
+        name: Build fact generators
+        description: NumPy-based generators with seasonal curves, weekend uplift, and promotional response
+        status: pending
+
+      - id: p2-t4
+        name: Implement configurable volume
+        description: --volume small | large flag controlling row counts
+        status: pending
+
+      - id: p2-t5
+        name: Inject controlled dirtiness
+        description: Nulls, duplicates, type drift, inconsistent casing — documented and intentional
+        status: pending
+
+      - id: p2-t6
+        name: Write Parquet output
+        description: Date-partitioned Parquet using pyarrow
+        status: pending
+
+      - id: p2-t7
+        name: Write generator test suite
+        description: pytest covering schema shape, referential integrity, and value ranges
+        status: pending
+
+  - id: p3
+    name: Raw Storage and Bronze Ingestion
+    description: R2 buckets, upload script, Snowflake external stage and COPY INTO, DuckDB bronze tables
+    milestone: M3
+    definition_of_done: Raw Parquet in R2 lands in bronze on both Snowflake and DuckDB with matching row counts
+    status: pending
+    tasks:
+
+      - id: p3-t1
+        name: Create R2 buckets
+        description: fashion-retail-raw and fashion-retail-served; configure S3-compatible credentials
+        status: pending
+
+      - id: p3-t2
+        name: Write R2 upload script
+        description: boto3 upload with S3-compatible endpoint pointing at R2
+        status: pending
+
+      - id: p3-t3
+        name: Snowflake external stage and bronze tables
+        description: Storage integration, file format, COPY INTO, ingestion metadata columns
+        status: pending
+
+      - id: p3-t4
+        name: DuckDB bronze tables
+        description: Read Parquet from R2 or local disk into DuckDB bronze layer
+        status: pending
+
+      - id: p3-t5
+        name: Validate row counts and ingestion log
+        description: Compare raw-to-bronze row counts; log every run
+        status: pending
+
+  - id: p4
+    name: Transformations — Silver and Gold with dbt
+    description: dbt project with staging, intermediate, and mart layers on dual Snowflake and DuckDB targets
+    milestone: M4
+    definition_of_done: dbt build passes on both targets with every test green and docs generated
+    status: pending
+    tasks:
+
+      - id: p4-t1
+        name: Initialize dbt project
+        description: profiles.yml with snowflake and duckdb targets; project skeleton
+        status: pending
+
+      - id: p4-t2
+        name: Build staging models
+        description: stg_ prefix, one per source; cast types, rename, deduplicate, standardize
+        status: pending
+
+      - id: p4-t3
+        name: Build intermediate models
+        description: int_ prefix; conform, join, resolve SCDs
+        status: pending
+
+      - id: p4-t4
+        name: Build gold mart models
+        description: dim_ and fct_ prefix; five star schemas for five domains
+        status: pending
+
+      - id: p4-t5
+        name: Write dbt tests and contracts
+        description: Built-ins, dbt-expectations, gold-layer model contracts
+        status: pending
+
+      - id: p4-t6
+        name: Generate dbt docs
+        description: dbt docs generate with full column documentation and lineage graph
+        status: pending
+
+  - id: p5
+    name: Orchestration with Airflow and Cosmos
+    description: Airflow in Docker with a Cosmos-rendered DAG covering the full pipeline
+    milestone: M5
+    definition_of_done: DAG runs end to end locally, is rerunnable without side effects, and produces the served snapshot
+    status: pending
+    tasks:
+
+      - id: p5-t1
+        name: Airflow Docker Compose setup
+        description: Official docker-compose.yml for Airflow local run
+        status: pending
+
+      - id: p5-t2
+        name: Build pipeline DAG
+        description: generate → upload → bronze → dbt run → dbt test → export snapshot
+        status: pending
+
+      - id: p5-t3
+        name: Integrate Cosmos for dbt task rendering
+        description: Each dbt model as a native Airflow task with retries and logs
+        status: pending
+
+      - id: p5-t4
+        name: Set retries, schedule, and idempotency
+        description: All tasks idempotent; safe backfills documented
+        status: pending
+
+  - id: p6
+    name: Containerization and Testing
+    description: Docker images, Compose stack, layered test suite
+    milestone: M6
+    definition_of_done: docker compose up followed by make test passes all tests on a clean machine
+    status: pending
+    tasks:
+
+      - id: p6-t1
+        name: Containerize Python services
+        description: Pinned base image Dockerfiles for data_generation and ingestion
+        status: pending
+
+      - id: p6-t2
+        name: Write Docker Compose stack
+        description: ingestion, Airflow, DuckDB, and supporting services
+        status: pending
+
+      - id: p6-t3
+        name: Write integration smoke test
+        description: Minimal end-to-end pipeline test in a container
+        status: pending
+
+  - id: p7
+    name: CI/CD with GitLab
+    description: GitLab pipeline with lint, test, build, scheduled run, and merge gates
+    milestone: M7
+    definition_of_done: Every merge request triggers lint, test, and build; merges blocked unless pipeline is green
+    status: pending
+    tasks:
+
+      - id: p7-t1
+        name: Write .gitlab-ci.yml
+        description: Stages for lint, test, build, dbt-run
+        status: pending
+
+      - id: p7-t2
+        name: Configure CI/CD variables
+        description: Masked and protected variables for all credentials
+        status: pending
+
+      - id: p7-t3
+        name: Add scheduled pipeline
+        description: Scheduled run demonstrating lightweight production orchestration
+        status: pending
+
+      - id: p7-t4
+        name: Gate merges on green pipeline
+        description: Protect main; require pipeline success for merge
+        status: pending
+
+      - id: p7-t5
+        name: Emit task status to Project Tracker
+        description: Pipeline calls tracker API on stage success and failure
+        status: pending
+
+  - id: p8
+    name: Serving Layer and Dashboard App
+    description: Mart export to R2 snapshot, Next.js app with five domain views deployed to Vercel
+    milestone: M8
+    definition_of_done: Public URL renders five domain views from the snapshot with no warehouse dependency
+    status: pending
+    tasks:
+
+      - id: p8-t1
+        name: Export gold marts to served snapshot
+        description: Parquet or JSON in R2, optionally loaded into Cloudflare D1 or Neon
+        status: pending
+
+      - id: p8-t2
+        name: Initialize Next.js app
+        description: Scaffold dashboard app; serverless route handlers reading the snapshot
+        status: pending
+
+      - id: p8-t3
+        name: Build five domain views
+        description: sales, marketing, category, product planning, placement — each decision-led
+        status: pending
+
+      - id: p8-t4
+        name: Apply brand design
+        description: Brand colors, logo, executive KPIs at top, supporting charts below
+        status: pending
+
+      - id: p8-t5
+        name: Deploy to Vercel
+        description: Vercel Hobby tier; public URL; verify no warehouse dependency
+        status: pending
+
+  - id: p9
+    name: Future Scope — Images, Observability, Documentation
+    description: Product image pipeline, Elementary observability, published documentation
+    milestone: M9
+    definition_of_done: Thumbnails render from R2, observability report live, docs published
+    status: pending
+    tasks:
+
+      - id: p9-t1
+        name: Build product image pipeline
+        description: Openly licensed images keyed by product_id stored in R2
+        status: pending
+
+      - id: p9-t2
+        name: Integrate Elementary observability
+        description: dbt test results, freshness, and anomaly report
+        status: pending
+
+      - id: p9-t3
+        name: Publish documentation site
+        description: Theory companion plus dbt docs via MkDocs or docs route in the app
+        status: pending

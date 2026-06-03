@@ -1,0 +1,63 @@
+# ── Secrets ───────────────────────────────────────────────────────────────────
+.env
+*.pem
+*.key
+snowflake_key.p8
+credentials.json
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+.uv/
+
+# ── Pytest / coverage ─────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ── Ruff / Black ──────────────────────────────────────────────────────────────
+.ruff_cache/
+
+# ── Generated data ────────────────────────────────────────────────────────────
+data_generation/output/
+*.parquet
+
+# ── dbt ───────────────────────────────────────────────────────────────────────
+dbt/target/
+dbt/logs/
+dbt/.user.yml
+dbt/profiles.yml
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+docker/volumes/
+
+# ── Node / Next.js ────────────────────────────────────────────────────────────
+dashboard/node_modules/
+dashboard/.next/
+dashboard/out/
+dashboard/.env.local
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.code-workspace
+
+# ── Airflow ───────────────────────────────────────────────────────────────────
+orchestration/logs/
+orchestration/airflow.db

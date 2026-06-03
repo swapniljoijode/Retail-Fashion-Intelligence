@@ -1,0 +1,103 @@
+stages:
+  - lint
+  - test
+  - build
+  - dbt-run
+  - notify
+
+variables:
+  DUCKDB_PATH: "./dbt/fashion_retail.duckdb"
+  GENERATION_SEED: "42"
+  GENERATION_VOLUME: "small"
+  UV_CACHE_DIR: ".uv-cache"
+
+cache:
+  paths:
+    - .uv-cache/
+    - .venv/
+
+default:
+  image: python:3.11-slim
+  before_script:
+    - pip install uv --quiet
+    - uv sync --all-extras
+
+# ── Lint ──────────────────────────────────────────────────────────────────────
+lint:python:
+  stage: lint
+  script:
+    - uv run ruff check .
+    - uv run black --check .
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+lint:sql:
+  stage: lint
+  script:
+    - cd dbt && uv run sqlfluff lint --dialect snowflake models/ || echo "No SQL models yet — skipping"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  allow_failure: true
+
+# ── Test ──────────────────────────────────────────────────────────────────────
+test:unit:
+  stage: test
+  script:
+    - uv run pytest tests/ -v --tb=short --no-header
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  artifacts:
+    when: always
+    paths:
+      - coverage.xml
+    expire_in: 7 days
+
+test:dbt:
+  stage: test
+  script:
+    - cd dbt && uv run dbt deps || true
+    - cd dbt && uv run dbt build --target duckdb || echo "No dbt models yet — skipping"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  allow_failure: true
+
+# ── Build ─────────────────────────────────────────────────────────────────────
+build:docker:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker build -f docker/Dockerfile.ingestion -t fashion-retail-ingestion:$CI_COMMIT_SHORT_SHA . || echo "No Dockerfile yet — skipping"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  allow_failure: true
+
+# ── Scheduled pipeline (lightweight orchestration proof) ──────────────────────
+dbt-run:scheduled:
+  stage: dbt-run
+  script:
+    - uv run python -m data_generation.main --volume small
+    - cd dbt && uv run dbt build --target duckdb
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  allow_failure: true
+
+# ── Notify Project Tracker ────────────────────────────────────────────────────
+notify:tracker:
+  stage: notify
+  script:
+    - |
+      if [ -n "$TRACKER_API_URL" ] && [ -n "$TRACKER_API_KEY" ]; then
+        curl -s -X POST "$TRACKER_API_URL/pipeline-status" \
+          -H "Authorization: Bearer $TRACKER_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d "{\"pipeline_id\": \"$CI_PIPELINE_ID\", \"status\": \"$CI_JOB_STATUS\", \"ref\": \"$CI_COMMIT_REF_NAME\"}"
+      fi
+  when: always
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
