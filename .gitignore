@@ -32,6 +32,11 @@ coverage.xml
 data_generation/output/
 *.parquet
 
+# ── DuckDB warehouse files ─────────────────────────────────────────────────────
+data/
+*.duckdb
+*.duckdb.wal
+
 # ── dbt ───────────────────────────────────────────────────────────────────────
 dbt/target/
 dbt/logs/

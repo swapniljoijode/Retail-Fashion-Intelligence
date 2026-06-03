@@ -1,4 +1,4 @@
-.PHONY: setup seed ingest dbt-run dbt-test dbt-docs test lint clean help
+.PHONY: setup seed seed-large upload bronze ingest dbt-run dbt-run-snowflake dbt-test dbt-docs dbt-build test test-ci lint lint-fix pipeline up down clean help
 
 # ── Environment ───────────────────────────────────────────────────────────────
 setup:
@@ -14,9 +14,16 @@ seed-large:
 	uv run python -m data_generation.main --volume large
 
 # ── Ingestion ─────────────────────────────────────────────────────────────────
-ingest:
+upload:  ## Upload Parquet output to Cloudflare R2 (requires R2_* env vars)
 	uv run python -m ingestion.upload_r2
-	uv run python -m ingestion.bronze_load
+
+bronze:  ## Load Parquet into DuckDB bronze layer (local, no cloud credentials needed)
+	uv run python -m ingestion.bronze_load --source-dir data_generation/output --db-path data/fashion_retail.duckdb
+
+bronze-reset:  ## Drop and reload all DuckDB bronze tables from scratch
+	uv run python -m ingestion.bronze_load --source-dir data_generation/output --db-path data/fashion_retail.duckdb --reset
+
+ingest: upload bronze  ## Upload to R2 then load bronze layer
 
 # ── dbt ───────────────────────────────────────────────────────────────────────
 dbt-run:
@@ -82,7 +89,10 @@ help:
 	@echo "  make setup          Install dependencies and pre-commit hooks"
 	@echo "  make seed           Generate synthetic data (small volume)"
 	@echo "  make seed-large     Generate synthetic data (large volume)"
-	@echo "  make ingest         Upload to R2 and load bronze layer"
+	@echo "  make upload         Upload Parquet to Cloudflare R2 (needs R2_* env vars)
+  make bronze         Load Parquet into DuckDB bronze layer (local, free)
+  make bronze-reset   Drop and reload all DuckDB bronze tables from scratch
+  make ingest         Upload to R2 then load bronze layer"
 	@echo "  make dbt-run        Run dbt models against DuckDB"
 	@echo "  make dbt-test       Run dbt tests against DuckDB"
 	@echo "  make dbt-docs       Generate and serve dbt docs"
