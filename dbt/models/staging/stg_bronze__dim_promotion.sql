@@ -17,8 +17,8 @@ select
     promotion_name,
     promotion_type,
     discount_pct,
-    start_date,
-    end_date,
+    try_cast(start_date as date)                as start_date,
+    try_cast(end_date as date)                  as end_date,
     is_sitewide
 
 from deduped

@@ -21,9 +21,9 @@ select
     region,
     city,
     acquisition_channel,
-    first_purchase_date,
+    cast(first_purchase_date as date)           as first_purchase_date,
     is_current,
-    effective_date,
-    expiry_date
+    cast(effective_date as date)                as effective_date,
+    try_cast(expiry_date as date)               as expiry_date
 
 from deduped

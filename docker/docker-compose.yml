@@ -1,0 +1,119 @@
+---
+# Fashion Retail Intelligence — Full stack Docker Compose
+#
+# Services
+# ─────────
+#   app              Python service: data generation, ingestion, dbt, pytest
+#   postgres         PostgreSQL metadata DB for Airflow
+#   airflow-init     One-off DB migration + admin user creation (run once)
+#   airflow-webserver Airflow UI on :8080
+#   airflow-scheduler Airflow task scheduler
+#
+# Quick start
+# ───────────
+#   docker compose build              # build the app image
+#   docker compose run --rm app make test          # unit + bronze tests
+#   docker compose run --rm app make test-all      # all tests incl. smoke
+#   docker compose run --rm app make pipeline      # full pipeline locally
+#
+# Airflow (run separately, needs airflow-init first):
+#   docker compose run --rm airflow-init
+#   docker compose up -d airflow-webserver airflow-scheduler
+#   # → http://localhost:8080  (admin / admin)
+#
+# One-command CI equivalent (what the pipeline does):
+#   docker compose run --rm app bash -c "make seed && make bronze-reset && make dbt-build"
+
+x-airflow-common: &airflow-common
+  build:
+    context: airflow
+    dockerfile: Dockerfile
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: ""
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    PYTHONPATH: /opt/airflow
+  volumes:
+    - ../orchestration/dags:/opt/airflow/dags:ro
+    - ../data_generation:/opt/airflow/data_generation:ro
+    - ../ingestion:/opt/airflow/ingestion:ro
+    - ../dbt:/opt/airflow/dbt:ro
+    - ./airflow/dbt_profiles.yml:/opt/airflow/dbt/profiles.yml:ro
+    - ../data:/opt/airflow/data
+    - airflow_logs:/opt/airflow/logs
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+
+  # ── Python app service ────────────────────────────────────────────────────────
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app/Dockerfile
+    volumes:
+      # Mount data/ so generated files persist on the host between runs
+      - ../data:/workspace/data
+    environment:
+      PYTHONPATH: /workspace
+      DUCKDB_PATH: /workspace/data/fashion_retail.duckdb
+    working_dir: /workspace
+    # Override CMD at runtime: docker compose run app <command>
+    command: ["uv", "run", "pytest", "tests/", "-v", "--tb=short"]
+
+  # ── PostgreSQL (Airflow metadata DB) ─────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      # Only started when the 'airflow' profile is active:
+      #   docker compose --profile airflow up
+      - airflow
+
+  # ── Airflow one-off init (run once) ──────────────────────────────────────────
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create \
+          --username admin --password admin \
+          --firstname Admin --lastname User \
+          --role Admin --email admin@fashionretail.local
+    profiles: [airflow]
+    restart: "no"
+
+  # ── Airflow webserver ─────────────────────────────────────────────────────────
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    profiles: [airflow]
+    restart: unless-stopped
+
+  # ── Airflow scheduler ─────────────────────────────────────────────────────────
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    profiles: [airflow]
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  airflow_logs:

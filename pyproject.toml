@@ -59,7 +59,11 @@ target-version = ["py311"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
-addopts = "--cov=data_generation --cov=ingestion --cov-report=term-missing"
+# Default run excludes slow integration tests. Use make test-all to include them.
+addopts = "--cov=data_generation --cov=ingestion --cov-report=term-missing -m 'not integration'"
+markers = [
+    "integration: end-to-end pipeline tests including dbt build (slow; needs dbt installed)",
+]
 
 [tool.sqlfluff.core]
 dialect = "snowflake"

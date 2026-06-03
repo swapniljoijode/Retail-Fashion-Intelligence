@@ -30,8 +30,10 @@ cleaned as (
         retail_price,
         margin_pct,
         is_current,
-        effective_date,
-        expiry_date
+        -- Pyarrow stores all-null date columns as `null` type; DuckDB then reads
+        -- them as INTEGER.  Explicit CASTs make the type DATE regardless of volume.
+        cast(effective_date as date)            as effective_date,
+        try_cast(expiry_date as date)           as expiry_date
     from deduped
 )
 
