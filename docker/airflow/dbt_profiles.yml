@@ -1,0 +1,12 @@
+# Docker-specific dbt profiles.yml.
+# Mounted into the Airflow container at /opt/airflow/dbt/profiles.yml.
+# The DuckDB file is shared between the host and containers via the
+# data volume defined in docker-compose.yml.
+
+fashion_retail:
+  target: duckdb
+  outputs:
+    duckdb:
+      type: duckdb
+      path: /opt/airflow/data/fashion_retail.duckdb
+      threads: 4
