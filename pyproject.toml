@@ -11,6 +11,8 @@ dependencies = [
     "pyarrow>=15.0.0",
     # Cloud storage
     "boto3>=1.34.0",
+    # Warehouse shadow — DuckDB bronze layer and CI testing
+    "duckdb>=0.10.0",
     # Config and secrets
     "python-dotenv>=1.0.0",
     # Testing
