@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: bronze
+    schema: bronze
+    description: >
+      Raw Parquet data loaded append-only into DuckDB by ingestion/bronze_load.py.
+      Every row carries two lineage columns — _source_file (Parquet path) and
+      _load_timestamp (ISO-8601 UTC string). Staging models deduplicate via
+      QUALIFY ROW_NUMBER() ordered by _load_timestamp DESC so the latest load wins.
+    tables:
+      - name: dim_date
+        description: "Calendar dimension spanning the configured date range."
+      - name: dim_product
+        description: "Product SKU dimension with SCD Type 2 on retail_price. ~20 % of styles have two rows. category column has ~8 % uppercase casing injected by dirtiness module."
+      - name: dim_store
+        description: "UK retail store dimension. Type 1."
+      - name: dim_customer
+        description: "Customer dimension with SCD Type 2 on customer_segment. ~15 % of customers have two rows. region (~5 %) and city (~4 %) have intentional nulls."
+      - name: dim_channel
+        description: "Sales channel dimension. 7 static rows."
+      - name: dim_promotion
+        description: "Promotion dimension. Includes a NONE sentinel at promotion_key = -1."
+      - name: fact_sales
+        description: "Order-line grain sales fact. units_sold is VARCHAR in bronze due to type-drift dirtiness (~3 %). ~0.8 % duplicate rows injected."
+      - name: fact_inventory_snapshot
+        description: "Product-store-day inventory snapshot. units_on_hand is VARCHAR in bronze due to type-drift (~2 %)."
+      - name: fact_returns
+        description: "Return-line grain returns fact. ~0.5 % duplicate rows injected."
+      - name: fact_web_events
+        description: "Session-event grain web events. customer_id and product_id nullable."
+      - name: fact_markdown
+        description: "Product-store-week markdown fact. Only populated for clearance months (Jan, Jul, Aug)."

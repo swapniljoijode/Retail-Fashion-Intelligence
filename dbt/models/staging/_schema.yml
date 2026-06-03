@@ -1,0 +1,193 @@
+version: 2
+
+models:
+
+  # ── dim_date ────────────────────────────────────────────────────────────────
+  - name: stg_bronze__dim_date
+    description: "Deduplicated calendar dimension from bronze. One row per day."
+    columns:
+      - name: date_key
+        description: "Integer date key in YYYYMMDD format."
+        data_tests: [unique, not_null]
+      - name: date
+        data_tests: [not_null]
+      - name: retail_season
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["SS", "AW"]
+      - name: is_weekend
+        data_tests: [not_null]
+
+  # ── dim_product ─────────────────────────────────────────────────────────────
+  - name: stg_bronze__dim_product
+    description: "Deduplicated product SKU dimension. Category casing normalised to Title Case. SCD Type 2 on retail_price."
+    columns:
+      - name: product_key
+        description: "Surrogate key — unique per SCD version."
+        data_tests: [unique, not_null]
+      - name: product_id
+        data_tests: [not_null]
+      - name: is_current
+        data_tests: [not_null]
+      - name: retail_price
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                strictly: true
+      - name: margin_pct
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 1
+
+  # ── dim_store ────────────────────────────────────────────────────────────────
+  - name: stg_bronze__dim_store
+    description: "Deduplicated UK store dimension. Type 1."
+    columns:
+      - name: store_key
+        data_tests: [unique, not_null]
+      - name: store_id
+        data_tests: [unique, not_null]
+      - name: store_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["flagship", "standard", "outlet", "pop_up"]
+      - name: square_footage
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                strictly: true
+
+  # ── dim_customer ─────────────────────────────────────────────────────────────
+  - name: stg_bronze__dim_customer
+    description: "Deduplicated customer dimension. SCD Type 2 on customer_segment. region and city nullable."
+    columns:
+      - name: customer_key
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests: [not_null]
+      - name: customer_segment
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["budget", "mid_market", "premium", "luxury"]
+      - name: is_current
+        data_tests: [not_null]
+
+  # ── dim_channel ───────────────────────────────────────────────────────────────
+  - name: stg_bronze__dim_channel
+    description: "Static sales channel dimension. 7 rows."
+    columns:
+      - name: channel_key
+        data_tests: [unique, not_null]
+      - name: channel_id
+        data_tests: [unique, not_null]
+      - name: channel_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["digital", "physical", "marketplace"]
+
+  # ── dim_promotion ─────────────────────────────────────────────────────────────
+  - name: stg_bronze__dim_promotion
+    description: "Promotion dimension including the NONE sentinel at promotion_key = -1."
+    columns:
+      - name: promotion_key
+        data_tests: [unique, not_null]
+      - name: promotion_id
+        data_tests: [unique, not_null]
+
+  # ── fact_sales ────────────────────────────────────────────────────────────────
+  - name: stg_bronze__fact_sales
+    description: "Order-line grain sales fact. units_sold cast from VARCHAR; non-castable rows excluded."
+    columns:
+      - name: sale_key
+        data_tests: [unique, not_null]
+      - name: order_id
+        data_tests: [not_null]
+      - name: sale_date
+        data_tests: [not_null]
+      - name: units_sold
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: net_revenue
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  # ── fact_inventory_snapshot ───────────────────────────────────────────────────
+  - name: stg_bronze__fact_inventory_snapshot
+    description: "Product-store-day inventory snapshot. units_on_hand cast from VARCHAR."
+    columns:
+      - name: inventory_key
+        data_tests: [unique, not_null]
+      - name: units_on_hand
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  # ── fact_returns ──────────────────────────────────────────────────────────────
+  - name: stg_bronze__fact_returns
+    description: "Return-line grain returns fact. Duplicates removed."
+    columns:
+      - name: return_key
+        data_tests: [unique, not_null]
+      - name: return_reason
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["size", "quality", "changed_mind", "damaged", "wrong_item", "late_delivery"]
+
+  # ── fact_web_events ───────────────────────────────────────────────────────────
+  - name: stg_bronze__fact_web_events
+    description: "Session-event grain web events. customer_id and product_id nullable."
+    columns:
+      - name: event_key
+        data_tests: [unique, not_null]
+      - name: event_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["page_view", "product_view", "add_to_cart", "checkout_start", "purchase", "abandon_cart"]
+
+  # ── fact_markdown ─────────────────────────────────────────────────────────────
+  - name: stg_bronze__fact_markdown
+    description: "Product-store-week markdown fact. Clearance months only."
+    columns:
+      - name: markdown_key
+        data_tests: [unique, not_null]
+      - name: markdown_depth_pct
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 1
+      - name: markdown_price
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                strictly: true

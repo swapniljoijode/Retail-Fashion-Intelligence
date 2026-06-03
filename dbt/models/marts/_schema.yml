@@ -1,0 +1,427 @@
+version: 2
+
+models:
+
+  # ── dim_date ─────────────────────────────────────────────────────────────────
+  - name: dim_date
+    description: "Gold calendar dimension. One row per day. Adds is_trading_day and composite period keys."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: date_key
+        description: "Integer date key in YYYYMMDD format. Primary key."
+        data_type: bigint
+        data_tests: [unique, not_null]
+      - name: date
+        data_type: date
+        data_tests: [not_null]
+      - name: day_of_week
+        data_type: integer
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                max_value: 7
+      - name: day_name
+        data_type: varchar
+        data_tests: [not_null]
+      - name: day_of_month
+        data_type: integer
+        data_tests: [not_null]
+      - name: day_of_year
+        data_type: integer
+        data_tests: [not_null]
+      - name: week_of_year
+        data_type: bigint
+        data_tests: [not_null]
+      - name: month_number
+        data_type: integer
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                max_value: 12
+      - name: month_name
+        data_type: varchar
+        data_tests: [not_null]
+      - name: quarter_number
+        data_type: integer
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                max_value: 4
+      - name: year
+        data_type: integer
+        data_tests: [not_null]
+      - name: retail_season
+        data_type: varchar
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["SS", "AW"]
+      - name: calendar_season
+        data_type: varchar
+        data_tests: [not_null]
+      - name: is_weekend
+        data_type: boolean
+        data_tests: [not_null]
+      - name: is_public_holiday
+        data_type: boolean
+        data_tests: [not_null]
+      - name: holiday_name
+        data_type: varchar
+      - name: trading_day_of_week
+        data_type: integer
+      - name: is_trading_day
+        data_type: boolean
+        data_tests: [not_null]
+      - name: year_quarter_label
+        data_type: varchar
+        data_tests: [not_null]
+      - name: year_quarter_key
+        data_type: integer
+        data_tests: [not_null]
+      - name: year_month_key
+        data_type: integer
+        data_tests: [not_null]
+
+  # ── dim_product ───────────────────────────────────────────────────────────────
+  - name: dim_product
+    description: "Gold product SKU dimension with SCD Type 2 on retail_price. version_count and had_price_change derived."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: product_key
+        description: "Surrogate key. Unique per SCD version."
+        data_type: bigint
+        data_tests: [unique, not_null]
+      - name: product_id
+        data_type: varchar
+        data_tests: [not_null]
+      - name: sku
+        data_type: varchar
+        data_tests: [not_null]
+      - name: product_name
+        data_type: varchar
+        data_tests: [not_null]
+      - name: category
+        data_type: varchar
+        data_tests: [not_null]
+      - name: subcategory
+        data_type: varchar
+        data_tests: [not_null]
+      - name: brand
+        data_type: varchar
+        data_tests: [not_null]
+      - name: color
+        data_type: varchar
+      - name: size
+        data_type: varchar
+        data_tests: [not_null]
+      - name: season
+        data_type: varchar
+        data_tests: [not_null]
+      - name: cost_price
+        data_type: double
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                strictly: true
+      - name: retail_price
+        data_type: double
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                strictly: true
+      - name: margin_pct
+        data_type: double
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 1
+      - name: is_current
+        data_type: boolean
+        data_tests: [not_null]
+      - name: effective_date
+        data_type: date
+        data_tests: [not_null]
+      - name: expiry_date
+        data_type: date
+      - name: version_count
+        data_type: bigint
+        data_tests: [not_null]
+      - name: had_price_change
+        data_type: boolean
+        data_tests: [not_null]
+
+  # ── dim_store ─────────────────────────────────────────────────────────────────
+  - name: dim_store
+    description: "Gold UK store dimension. Adds size_band derived from square footage."
+    columns:
+      - name: store_key
+        data_tests: [unique, not_null]
+      - name: store_id
+        data_tests: [unique, not_null]
+      - name: store_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["flagship", "standard", "outlet", "pop_up"]
+      - name: size_band
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["small", "medium", "large"]
+
+  # ── dim_customer ──────────────────────────────────────────────────────────────
+  - name: dim_customer
+    description: "Gold customer dimension with SCD Type 2 on customer_segment."
+    columns:
+      - name: customer_key
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests: [not_null]
+      - name: customer_segment
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["budget", "mid_market", "premium", "luxury"]
+      - name: is_current
+        data_tests: [not_null]
+
+  # ── dim_channel ───────────────────────────────────────────────────────────────
+  - name: dim_channel
+    description: "Gold sales channel dimension. Adds is_digital flag."
+    columns:
+      - name: channel_key
+        data_tests: [unique, not_null]
+      - name: channel_id
+        data_tests: [unique, not_null]
+      - name: is_digital
+        data_tests: [not_null]
+
+  # ── dim_promotion ─────────────────────────────────────────────────────────────
+  - name: dim_promotion
+    description: "Gold promotion dimension. Adds is_no_promotion sentinel flag and duration_days."
+    columns:
+      - name: promotion_key
+        data_tests: [unique, not_null]
+      - name: promotion_id
+        data_tests: [unique, not_null]
+      - name: is_no_promotion
+        data_tests: [not_null]
+
+  # ── fct_sales ─────────────────────────────────────────────────────────────────
+  - name: fct_sales
+    description: "Gold sales fact at order-line grain. Surrogate keys resolved via SCD2 date-range joins."
+    columns:
+      - name: sale_key
+        description: "Natural primary key from source."
+        data_tests: [unique, not_null]
+      - name: sale_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date
+      - name: product_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+      - name: store_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_store')
+                field: store_key
+      - name: customer_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+      - name: channel_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_channel')
+                field: channel_key
+      - name: promotion_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_promotion')
+                field: promotion_key
+      - name: units_sold
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+      - name: gross_revenue
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                strictly: true
+      - name: net_revenue
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  # ── fct_inventory_snapshot ────────────────────────────────────────────────────
+  - name: fct_inventory_snapshot
+    description: "Gold inventory snapshot. Semi-additive: average units_on_hand across time, sum on a single day."
+    columns:
+      - name: inventory_key
+        data_tests: [unique, not_null]
+      - name: snapshot_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date
+      - name: product_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+      - name: store_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_store')
+                field: store_key
+      - name: units_on_hand
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  # ── fct_returns ───────────────────────────────────────────────────────────────
+  - name: fct_returns
+    description: "Gold returns fact at return-line grain."
+    columns:
+      - name: return_key
+        data_tests: [unique, not_null]
+      - name: return_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date
+      - name: return_reason
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["size", "quality", "changed_mind", "damaged", "wrong_item", "late_delivery"]
+      - name: refund_value
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                strictly: true
+
+  # ── fct_web_events ────────────────────────────────────────────────────────────
+  - name: fct_web_events
+    description: "Gold web events fact at session-event grain. customer_key and product_key nullable."
+    columns:
+      - name: event_key
+        data_tests: [unique, not_null]
+      - name: event_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date
+      - name: channel_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_channel')
+                field: channel_key
+      - name: event_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["page_view", "product_view", "add_to_cart", "checkout_start", "purchase", "abandon_cart"]
+
+  # ── fct_markdown ──────────────────────────────────────────────────────────────
+  - name: fct_markdown
+    description: "Gold markdown fact at product × store × week grain. Clearance months only."
+    columns:
+      - name: markdown_key
+        data_tests: [unique, not_null]
+      - name: week_start_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date
+      - name: product_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+      - name: store_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_store')
+                field: store_key
+      - name: markdown_depth_pct
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 1
+      - name: markdown_price
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                strictly: true
