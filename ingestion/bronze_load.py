@@ -127,7 +127,7 @@ def _load_table(
 
     count_match = source_rows == loaded_rows
     status = "SUCCESS" if count_match else "COUNT_MISMATCH"
-    match_symbol = "✓" if count_match else "✗ MISMATCH"
+    match_symbol = "OK" if count_match else "!! MISMATCH"
 
     print(
         f"  {table_name:<35}  src={source_rows:>8,}  loaded={loaded_rows:>8,}  {match_symbol}"

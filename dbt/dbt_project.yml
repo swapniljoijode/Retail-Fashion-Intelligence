@@ -1,0 +1,41 @@
+name: fashion_retail
+version: "1.0.0"
+config-version: 2
+
+profile: fashion_retail
+
+model-paths:    ["models"]
+seed-paths:     ["seeds"]
+test-paths:     ["tests"]
+macro-paths:    ["macros"]
+analysis-paths: ["analyses"]
+snapshot-paths: ["snapshots"]
+
+target-path:  "target"
+clean-targets: ["target", "dbt_packages"]
+
+# ── Model materializations and schema assignments ─────────────────────────────
+models:
+  fashion_retail:
+    staging:
+      +materialized: view
+      +schema: staging
+      +docs:
+        show: true
+    intermediate:
+      +materialized: ephemeral
+    marts:
+      +materialized: table
+      +schema: marts
+      +docs:
+        show: true
+
+# ── Source freshness ──────────────────────────────────────────────────────────
+# _load_timestamp in bronze is stored as VARCHAR (ISO-8601).
+# Phase 9 (Elementary) will add typed freshness monitoring.
+
+# ── Variables ─────────────────────────────────────────────────────────────────
+vars:
+  # Maximum number of SCD versions expected per product / customer.
+  # Used in dbt-expectations distribution tests.
+  max_scd_versions: 3

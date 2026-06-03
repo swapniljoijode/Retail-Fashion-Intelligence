@@ -1,0 +1,40 @@
+# Copy this file to profiles.yml (same directory) and fill in your credentials.
+# profiles.yml is gitignored — never commit real credentials.
+#
+# Run dbt commands from inside the dbt/ directory:
+#   cd dbt && dbt build --target duckdb --profiles-dir .
+#
+# Or via the Makefile from the project root:
+#   make dbt-build
+
+fashion_retail:
+  target: duckdb        # default target; override with --target snowflake
+  outputs:
+
+    # ── DuckDB (free, always available) ───────────────────────────────────────
+    # Path is relative to the dbt/ working directory.
+    # Set DUCKDB_PATH in .env to override (path relative to project root).
+    duckdb:
+      type: duckdb
+      path: "../data/fashion_retail.duckdb"
+      threads: 4
+
+    # ── Snowflake (30-day trial) ───────────────────────────────────────────────
+    # Uses key-pair authentication (recommended over password).
+    # Generate key pair:
+    #   openssl genrsa -out snowflake_key.p8 2048
+    #   openssl rsa -in snowflake_key.p8 -pubout -out snowflake_key.pub
+    # Upload the public key to Snowflake:
+    #   ALTER USER <your_user> SET RSA_PUBLIC_KEY='<contents_of_snowflake_key.pub>';
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user:    "{{ env_var('SNOWFLAKE_USER') }}"
+      private_key_path:       "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
+      private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE', '') }}"
+      role:      "{{ env_var('SNOWFLAKE_ROLE', 'SYSADMIN') }}"
+      database:  "{{ env_var('SNOWFLAKE_DATABASE', 'FASHION_RETAIL') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'FASHION_WH') }}"
+      schema: staging
+      threads: 4
+      client_session_keep_alive: false

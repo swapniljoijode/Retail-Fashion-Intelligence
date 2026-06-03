@@ -1,0 +1,15 @@
+version: 2
+
+models:
+
+  - name: int_product__scd2_surrogate
+    description: >
+      Ephemeral SCD Type 2 lookup: product_key, product_id, effective_date,
+      expiry_date. Fact models join on product_id + date range to resolve the
+      correct surrogate product_key at the time of the event.
+
+  - name: int_customer__scd2_surrogate
+    description: >
+      Ephemeral SCD Type 2 lookup: customer_key, customer_id, effective_date,
+      expiry_date. Fact models join on customer_id + date range to resolve the
+      correct surrogate customer_key at the time of the event.

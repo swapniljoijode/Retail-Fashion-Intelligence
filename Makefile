@@ -26,21 +26,27 @@ bronze-reset:  ## Drop and reload all DuckDB bronze tables from scratch
 ingest: upload bronze  ## Upload to R2 then load bronze layer
 
 # ── dbt ───────────────────────────────────────────────────────────────────────
-dbt-run:
-	cd dbt && uv run dbt run --target duckdb
+dbt-deps:  ## Install dbt packages (dbt-expectations) — run once after clone or packages.yml change
+	cd dbt && uv run dbt deps --profiles-dir .
 
-dbt-run-snowflake:
-	cd dbt && uv run dbt run --target snowflake
+dbt-run:  ## Run dbt models against DuckDB
+	cd dbt && uv run dbt run --target duckdb --profiles-dir .
 
-dbt-test:
-	cd dbt && uv run dbt test --target duckdb
+dbt-run-snowflake:  ## Run dbt models against Snowflake trial
+	cd dbt && uv run dbt run --target snowflake --profiles-dir .
 
-dbt-docs:
-	cd dbt && uv run dbt docs generate --target duckdb
-	cd dbt && uv run dbt docs serve
+dbt-test:  ## Run dbt tests against DuckDB
+	cd dbt && uv run dbt test --target duckdb --profiles-dir .
 
-dbt-build:
-	cd dbt && uv run dbt build --target duckdb
+dbt-docs:  ## Generate dbt docs and serve on localhost:8080
+	cd dbt && uv run dbt docs generate --target duckdb --profiles-dir .
+	cd dbt && uv run dbt docs serve --port 8080
+
+dbt-build:  ## dbt deps + run + test against DuckDB in one step
+	cd dbt && uv run dbt deps --profiles-dir . && uv run dbt build --target duckdb --profiles-dir .
+
+dbt-clean:  ## Remove dbt target and dbt_packages directories
+	cd dbt && uv run dbt clean
 
 # ── Testing ───────────────────────────────────────────────────────────────────
 test:
@@ -93,10 +99,12 @@ help:
   make bronze         Load Parquet into DuckDB bronze layer (local, free)
   make bronze-reset   Drop and reload all DuckDB bronze tables from scratch
   make ingest         Upload to R2 then load bronze layer"
+	@echo "  make dbt-deps       Install dbt packages (run once after clone)"
 	@echo "  make dbt-run        Run dbt models against DuckDB"
 	@echo "  make dbt-test       Run dbt tests against DuckDB"
-	@echo "  make dbt-docs       Generate and serve dbt docs"
-	@echo "  make dbt-build      dbt run + test in one step"
+	@echo "  make dbt-docs       Generate and serve dbt docs on :8080"
+	@echo "  make dbt-build      dbt deps + run + test against DuckDB"
+	@echo "  make dbt-clean      Remove dbt target and dbt_packages"
 	@echo "  make test           Run pytest suite"
 	@echo "  make lint           Check code style (ruff, black, sqlfluff)"
 	@echo "  make lint-fix       Auto-fix code style issues"
