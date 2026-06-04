@@ -11,7 +11,6 @@ export default function SalesPage() {
   const kpis = overview.kpis;
 
   const fmtC  = (v: number) => fmtCurrency(v, true);
-  const fmtPctShort = (v: number) => fmtPct(v, 1);
 
   // Channel chart data
   const channelData = sales.by_channel.map((r) => ({
@@ -75,21 +74,21 @@ export default function SalesPage() {
         </ChartCard>
 
         <ChartCard title="Revenue by Channel" subtitle="Gross revenue split">
-          <HorizontalBarChart data={channelData} formatter={fmtC} />
+          <HorizontalBarChart data={channelData} format="currency" />
         </ChartCard>
       </div>
 
       {/* Category split */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <ChartCard title="Revenue by Category" subtitle="Gross revenue ranking">
-          <HorizontalBarChart data={categoryData} formatter={fmtC} />
+          <HorizontalBarChart data={categoryData} format="currency" />
         </ChartCard>
 
         <ChartCard title="Gross Margin % by Category" subtitle="Net revenue basis">
           <HorizontalBarChart
             data={marginData}
             color="#8b5cf6"
-            formatter={fmtPctShort}
+            format="percent"
           />
         </ChartCard>
       </div>

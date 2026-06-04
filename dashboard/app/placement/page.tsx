@@ -64,11 +64,11 @@ export default function PlacementPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <ChartCard title="Revenue by Region" subtitle="Gross revenue — ranked">
-          <HorizontalBarChart data={regionRevenueData} formatter={(v) => fmtCurrency(v, true)} />
+          <HorizontalBarChart data={regionRevenueData} format="currency" />
         </ChartCard>
 
         <ChartCard title="Revenue by Store Type" subtitle="Gross revenue split">
-          <HorizontalBarChart data={storeTypeData} formatter={(v) => fmtCurrency(v, true)} />
+          <HorizontalBarChart data={storeTypeData} format="currency" />
         </ChartCard>
       </div>
 
@@ -80,7 +80,7 @@ export default function PlacementPage() {
           <HorizontalBarChart
             data={imbalanceData}
             color="#f59e0b"
-            formatter={(v) => `${(v * 100).toFixed(1)}pp`}
+            format="pp"
           />
         </ChartCard>
 
@@ -88,7 +88,7 @@ export default function PlacementPage() {
           <HorizontalBarChart
             data={regionStockoutData}
             color="#ef4444"
-            formatter={(v) => fmtPct(v)}
+            format="percent"
           />
         </ChartCard>
       </div>

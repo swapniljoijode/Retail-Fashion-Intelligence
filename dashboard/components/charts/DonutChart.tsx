@@ -2,14 +2,42 @@
 
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
+type FormatType = "currency" | "percent" | "number" | "pp";
+
 interface DonutChartProps {
   data: { name: string; value: number }[];
-  formatter?: (v: number) => string;
+  format?: FormatType;
 }
 
 const COLORS = ["#dfa832", "#8b5cf6", "#06b6d4", "#ec4899", "#22c55e", "#f59e0b"];
 
-export default function DonutChart({ data, formatter = (v) => v.toFixed(0) }: DonutChartProps) {
+function makeFormatter(format?: FormatType): (v: number) => string {
+  switch (format) {
+    case "currency":
+      return (v) =>
+        new Intl.NumberFormat("en-GB", {
+          style: "currency",
+          currency: "GBP",
+          notation: "compact",
+          maximumFractionDigits: 1,
+        }).format(v);
+    case "percent":
+      return (v) => `${(v * 100).toFixed(1)}%`;
+    case "number":
+      return (v) =>
+        new Intl.NumberFormat("en-GB", {
+          notation: "compact",
+          maximumFractionDigits: 1,
+        }).format(v);
+    case "pp":
+      return (v) => `${(v * 100).toFixed(1)}pp`;
+    default:
+      return (v) => v.toFixed(0);
+  }
+}
+
+export default function DonutChart({ data, format }: DonutChartProps) {
+  const formatter = makeFormatter(format);
   return (
     <ResponsiveContainer width="100%" height={220}>
       <PieChart>

@@ -75,7 +75,7 @@ export default function PlanningPage() {
           <HorizontalBarChart
             data={sellThroughData}
             color="#22c55e"
-            formatter={(v) => fmtPct(v)}
+            format="percent"
           />
         </ChartCard>
 
@@ -83,7 +83,7 @@ export default function PlanningPage() {
           <HorizontalBarChart
             data={stockoutData}
             color="#ef4444"
-            formatter={(v) => fmtPct(v)}
+            format="percent"
           />
         </ChartCard>
       </div>

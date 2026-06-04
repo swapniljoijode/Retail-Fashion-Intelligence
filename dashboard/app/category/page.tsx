@@ -69,14 +69,14 @@ export default function CategoryPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <ChartCard title="Revenue by Category" subtitle="Gross revenue ranking">
-          <HorizontalBarChart data={revenueData} formatter={(v) => fmtCurrency(v, true)} />
+          <HorizontalBarChart data={revenueData} format="currency" />
         </ChartCard>
 
         <ChartCard title="Gross Margin % by Category" subtitle="Net revenue basis">
           <HorizontalBarChart
             data={marginData}
             color="#8b5cf6"
-            formatter={(v) => fmtPct(v)}
+            format="percent"
           />
         </ChartCard>
       </div>
@@ -86,7 +86,7 @@ export default function CategoryPage() {
           <HorizontalBarChart
             data={markdownData}
             color="#ef4444"
-            formatter={(v) => fmtPct(v)}
+            format="percent"
           />
         </ChartCard>
 

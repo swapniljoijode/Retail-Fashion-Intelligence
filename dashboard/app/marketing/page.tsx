@@ -58,7 +58,7 @@ export default function MarketingPage() {
         <ChartCard title="Sessions by Device" subtitle="Share of total web sessions">
           <DonutChart
             data={deviceData}
-            formatter={(v) => fmtNumber(v, true)}
+            format="number"
           />
         </ChartCard>
       </div>
