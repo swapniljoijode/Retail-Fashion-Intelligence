@@ -1,3 +1,25 @@
+---
+# Fashion Retail Intelligence — GitLab CI/CD Pipeline
+#
+# Stages
+# ──────
+#   lint           ruff, black, sqlfluff — runs on every MR and push to main
+#   test           unit + bronze (fast) and integration smoke (dbt build)
+#   build          Docker image for the Python app service
+#   dbt-run        Scheduled full pipeline (lightweight orchestration proof)
+#   notify         Emit status to the Project Tracker API
+#
+# Required CI/CD variables  (Settings → CI/CD → Variables)
+# ─────────────────────────────────────────────────────────
+#   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY   (R2 upload)
+#   R2_RAW_BUCKET, R2_SERVED_BUCKET                          (R2 bucket names)
+#   SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PRIVATE_KEY (Snowflake trial)
+#   TRACKER_API_URL, TRACKER_API_KEY                         (Project Tracker)
+#   GENERATION_VOLUME                                        (default: small)
+#
+# Branch protection:  Settings → Repository → Protected Branches → main
+#                     → Require pipeline to succeed before merge
+
 stages:
   - lint
   - test
@@ -5,24 +27,29 @@ stages:
   - dbt-run
   - notify
 
+# ── Global defaults ────────────────────────────────────────────────────────────
 variables:
-  DUCKDB_PATH: "./dbt/fashion_retail.duckdb"
-  GENERATION_SEED: "42"
+  DUCKDB_PATH:       "data/fashion_retail.duckdb"
   GENERATION_VOLUME: "small"
-  UV_CACHE_DIR: ".uv-cache"
+  UV_CACHE_DIR:      ".uv-cache"
 
 cache:
+  key: "$CI_COMMIT_REF_SLUG-$CI_JOB_STAGE"
   paths:
     - .uv-cache/
     - .venv/
+    - dbt/dbt_packages/
 
 default:
   image: python:3.11-slim
   before_script:
-    - pip install uv --quiet
-    - uv sync --all-extras
+    - apt-get update -qq
+    - apt-get install -y --no-install-recommends git curl -qq
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+    - uv sync --all-extras --cache-dir "$UV_CACHE_DIR"
 
-# ── Lint ──────────────────────────────────────────────────────────────────────
+# ── Lint ───────────────────────────────────────────────────────────────────────
 lint:python:
   stage: lint
   script:
@@ -30,74 +57,137 @@ lint:python:
     - uv run black --check .
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 lint:sql:
   stage: lint
   script:
-    - cd dbt && uv run sqlfluff lint --dialect snowflake models/ || echo "No SQL models yet — skipping"
+    - cd dbt && uv run sqlfluff lint models/ --dialect snowflake
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  allow_failure: true
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
-# ── Test ──────────────────────────────────────────────────────────────────────
+# ── Test ───────────────────────────────────────────────────────────────────────
 test:unit:
   stage: test
+  needs: [lint:python, lint:sql]
   script:
-    - uv run pytest tests/ -v --tb=short --no-header
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - uv run pytest tests/ -v --tb=short -m "not integration"
+  coverage: '/TOTAL.*\s+(\d+%)$/'
   artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
     when: always
-    paths:
-      - coverage.xml
     expire_in: 7 days
-
-test:dbt:
-  stage: test
-  script:
-    - cd dbt && uv run dbt deps || true
-    - cd dbt && uv run dbt build --target duckdb || echo "No dbt models yet — skipping"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  allow_failure: true
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
-# ── Build ─────────────────────────────────────────────────────────────────────
+test:integration:
+  stage: test
+  needs: [lint:python, lint:sql]
+  script:
+    - |
+      cat > dbt/profiles.yml << 'PROFILES'
+      fashion_retail:
+        target: duckdb
+        outputs:
+          duckdb:
+            type: duckdb
+            path: ":memory:"
+            threads: 4
+      PROFILES
+    - cd dbt && uv run dbt deps --profiles-dir . --no-partial-parse
+    - uv run pytest tests/test_smoke_pipeline.py -v --tb=short --no-cov -m ""
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+# ── Build ──────────────────────────────────────────────────────────────────────
 build:docker:
   stage: build
   image: docker:24
   services:
-    - docker:24-dind
+    - name: docker:24-dind
+      alias: docker
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_HOST: "tcp://docker:2376"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "/certs/client"
+  before_script: []
   script:
-    - docker build -f docker/Dockerfile.ingestion -t fashion-retail-ingestion:$CI_COMMIT_SHORT_SHA . || echo "No Dockerfile yet — skipping"
+    - docker build
+        -f docker/app/Dockerfile
+        -t "fashion-retail-app:$CI_COMMIT_SHORT_SHA"
+        -t "fashion-retail-app:latest"
+        .
+  needs: [test:unit, test:integration]
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  allow_failure: true
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
-# ── Scheduled pipeline (lightweight orchestration proof) ──────────────────────
+# ── Scheduled pipeline (lightweight orchestration proof) ───────────────────────
 dbt-run:scheduled:
   stage: dbt-run
   script:
-    - uv run python -m data_generation.main --volume small
-    - cd dbt && uv run dbt build --target duckdb
+    - mkdir -p data
+    - |
+      cat > dbt/profiles.yml << 'PROFILES'
+      fashion_retail:
+        target: duckdb
+        outputs:
+          duckdb:
+            type: duckdb
+            path: data/fashion_retail.duckdb
+            threads: 4
+      PROFILES
+    - uv run python -m data_generation.main
+        --volume "$GENERATION_VOLUME"
+        --output-dir data_generation/output
+    - uv run python -m ingestion.bronze_load
+        --source-dir data_generation/output
+        --db-path    "$DUCKDB_PATH"
+        --reset
+    - cd dbt && uv run dbt deps --profiles-dir . --no-partial-parse
+    - cd dbt && uv run dbt build --target duckdb --profiles-dir . --no-partial-parse
+    - |
+      if [ -n "$R2_ACCOUNT_ID" ]; then
+        uv run python -m ingestion.upload_r2 --input-dir data_generation/output --bucket "$R2_RAW_BUCKET" --prefix raw
+      fi
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
-  allow_failure: true
+  artifacts:
+    paths:
+      - data/fashion_retail.duckdb
+    expire_in: 1 week
 
-# ── Notify Project Tracker ────────────────────────────────────────────────────
+# ── Notify Project Tracker ──────────────────────────────────────────────────────
 notify:tracker:
   stage: notify
+  before_script: []
+  image: curlimages/curl:latest
   script:
     - |
-      if [ -n "$TRACKER_API_URL" ] && [ -n "$TRACKER_API_KEY" ]; then
-        curl -s -X POST "$TRACKER_API_URL/pipeline-status" \
-          -H "Authorization: Bearer $TRACKER_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d "{\"pipeline_id\": \"$CI_PIPELINE_ID\", \"status\": \"$CI_JOB_STATUS\", \"ref\": \"$CI_COMMIT_REF_NAME\"}"
+      if [ -z "$TRACKER_API_URL" ] || [ -z "$TRACKER_API_KEY" ]; then
+        echo "TRACKER_API_URL or TRACKER_API_KEY not set — skipping"
+        exit 0
       fi
+      STATUS="success"
+      if [ "$CI_JOB_STATUS" != "success" ]; then STATUS="failed"; fi
+      curl -sf -X POST "$TRACKER_API_URL/api/pipeline-status" \
+        -H "Authorization: Bearer $TRACKER_API_KEY" \
+        -H "Content-Type: application/json" \
+        --data-raw "{
+          \"project\":      \"fashion-retail-intelligence\",
+          \"pipeline_id\":  \"$CI_PIPELINE_ID\",
+          \"ref\":          \"$CI_COMMIT_REF_NAME\",
+          \"commit_sha\":   \"$CI_COMMIT_SHORT_SHA\",
+          \"status\":       \"$STATUS\",
+          \"pipeline_url\": \"$CI_PIPELINE_URL\"
+        }" || echo "Tracker notification failed (non-fatal)"
   when: always
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'

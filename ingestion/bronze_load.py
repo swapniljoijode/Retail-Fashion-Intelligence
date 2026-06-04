@@ -16,12 +16,13 @@ CLI:
     python -m ingestion.bronze_load --source-dir data_generation/output --db-path data/bronze.duckdb
     python -m ingestion.bronze_load --reset
 """
+
 from __future__ import annotations
 
 import argparse
 import os
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import duckdb
@@ -33,17 +34,17 @@ load_dotenv()
 # used to read its Parquet files.  Dimensions land as a single file;
 # facts are year/month partitioned so the recursive glob is needed.
 _TABLE_GLOBS: dict[str, str] = {
-    "dim_date":                "dim_date/dim_date.parquet",
-    "dim_product":             "dim_product/dim_product.parquet",
-    "dim_store":               "dim_store/dim_store.parquet",
-    "dim_customer":            "dim_customer/dim_customer.parquet",
-    "dim_channel":             "dim_channel/dim_channel.parquet",
-    "dim_promotion":           "dim_promotion/dim_promotion.parquet",
-    "fact_sales":              "fact_sales/**/*.parquet",
+    "dim_date": "dim_date/dim_date.parquet",
+    "dim_product": "dim_product/dim_product.parquet",
+    "dim_store": "dim_store/dim_store.parquet",
+    "dim_customer": "dim_customer/dim_customer.parquet",
+    "dim_channel": "dim_channel/dim_channel.parquet",
+    "dim_promotion": "dim_promotion/dim_promotion.parquet",
+    "fact_sales": "fact_sales/**/*.parquet",
     "fact_inventory_snapshot": "fact_inventory_snapshot/**/*.parquet",
-    "fact_returns":            "fact_returns/**/*.parquet",
-    "fact_web_events":         "fact_web_events/**/*.parquet",
-    "fact_markdown":           "fact_markdown/**/*.parquet",
+    "fact_returns": "fact_returns/**/*.parquet",
+    "fact_web_events": "fact_web_events/**/*.parquet",
+    "fact_markdown": "fact_markdown/**/*.parquet",
 }
 
 
@@ -55,7 +56,8 @@ def _connect(db_path: str) -> duckdb.DuckDBPyConnection:
 def _bootstrap(conn: duckdb.DuckDBPyConnection) -> None:
     """Ensure the bronze schema and ingestion_log table exist."""
     conn.execute("CREATE SCHEMA IF NOT EXISTS bronze")
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS bronze.ingestion_log (
             run_id          VARCHAR,
             table_name      VARCHAR,
@@ -67,7 +69,8 @@ def _bootstrap(conn: duckdb.DuckDBPyConnection) -> None:
             status          VARCHAR,
             error_message   VARCHAR
         )
-    """)
+    """
+    )
 
 
 def _glob_to_duckdb(source_dir: Path, pattern: str) -> str:
@@ -101,7 +104,8 @@ def _load_table(
 
     # Create the table on first load using schema-on-read from Parquet.
     # The WHERE FALSE clause builds the schema without inserting any rows.
-    conn.execute(f"""
+    conn.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS bronze.{table_name} AS
         SELECT
             *,
@@ -109,17 +113,20 @@ def _load_table(
             '{load_ts}'     AS _load_timestamp
         FROM read_parquet('{glob}', filename=true)
         WHERE FALSE
-    """)
+    """
+    )
 
     # Append this run's rows with lineage metadata attached.
-    conn.execute(f"""
+    conn.execute(
+        f"""
         INSERT INTO bronze.{table_name}
         SELECT
             *,
             filename        AS _source_file,
             '{load_ts}'     AS _load_timestamp
         FROM read_parquet('{glob}', filename=true)
-    """)
+    """
+    )
 
     loaded_rows: int = conn.execute(
         f"SELECT COUNT(*) FROM bronze.{table_name} WHERE _load_timestamp = '{load_ts}'"
@@ -193,7 +200,7 @@ def run_bronze_load(
         print("Reset: dropped all bronze tables.\n")
 
     run_id = str(uuid.uuid4())
-    load_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f+00:00")
+    load_ts = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%f+00:00")
 
     print(f"Bronze load run : {run_id}")
     print(f"Source          : {source_dir}")
@@ -206,7 +213,9 @@ def run_bronze_load(
 
     for table_name, glob_pattern in _TABLE_GLOBS.items():
         try:
-            row = _load_table(conn, table_name, source_dir, glob_pattern, run_id, load_ts)
+            row = _load_table(
+                conn, table_name, source_dir, glob_pattern, run_id, load_ts
+            )
         except Exception as exc:
             row = {
                 "run_id": run_id,

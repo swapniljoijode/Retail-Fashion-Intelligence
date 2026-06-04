@@ -1,0 +1,146 @@
+name: Scheduled Pipeline
+
+# Runs the full medallion pipeline on a weekly schedule and on manual dispatch.
+# This serves as the lightweight production-grade orchestration proof while
+# Airflow handles the local demonstration (see docs/backfill_procedure.md).
+#
+# What it does:
+#   1. Generates small-volume synthetic data (seed = 42, reproducible)
+#   2. Loads DuckDB bronze layer (--reset for idempotency)
+#   3. Installs dbt packages and runs dbt build (run + test, all 212 tests)
+#   4. Exports gold marts to data/served/*.parquet (the dashboard snapshot)
+#   5. Optionally uploads the snapshot to Cloudflare R2 (when secrets are set)
+#
+# GitHub Actions secrets required for R2 upload (optional):
+#   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_SERVED_BUCKET
+
+on:
+  schedule:
+    # Every Monday at 02:00 UTC — outside peak hours, results ready by morning.
+    - cron: "0 2 * * 1"
+
+  # Allow manual trigger from the Actions tab with a configurable volume.
+  workflow_dispatch:
+    inputs:
+      volume:
+        description: "Data generation volume"
+        required: false
+        default: "small"
+        type: choice
+        options: [test, small, large]
+
+env:
+  UV_VERSION: "0.4.29"
+  VOLUME:     ${{ inputs.volume || 'small' }}
+
+jobs:
+  full-pipeline:
+    name: "Weekly pipeline (${{ inputs.volume || 'small' }} volume)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+
+      - name: Install dependencies (including dbt)
+        run: uv sync --all-extras
+
+      - name: Cache dbt packages
+        uses: actions/cache@v4
+        with:
+          path: dbt/dbt_packages
+          key: dbt-packages-${{ hashFiles('dbt/packages.yml') }}
+          restore-keys: dbt-packages-
+
+      # ── Step 1: Generate synthetic data ────────────────────────────────────
+      - name: Generate ${{ env.VOLUME }} volume data
+        run: |
+          uv run python -m data_generation.main \
+            --volume "${{ env.VOLUME }}" \
+            --output-dir data_generation/output
+
+      # ── Step 2: Load DuckDB bronze layer ───────────────────────────────────
+      - name: Load bronze layer (reset=True for idempotency)
+        run: |
+          mkdir -p data
+          uv run python -m ingestion.bronze_load \
+            --source-dir data_generation/output \
+            --db-path    data/fashion_retail.duckdb \
+            --reset
+
+      # ── Step 3: dbt build (run + test) ─────────────────────────────────────
+      - name: Create dbt profiles.yml for CI (file-backed DuckDB)
+        run: |
+          cat > dbt/profiles.yml << 'PROFILES'
+          fashion_retail:
+            target: duckdb
+            outputs:
+              duckdb:
+                type: duckdb
+                path: data/fashion_retail.duckdb
+                threads: 4
+          PROFILES
+
+      - name: dbt deps
+        run: cd dbt && uv run dbt deps --profiles-dir . --no-partial-parse
+
+      - name: dbt build — run + test all models
+        run: |
+          cd dbt && uv run dbt build \
+            --target duckdb \
+            --profiles-dir . \
+            --no-partial-parse
+
+      # ── Step 4: Export gold snapshot ───────────────────────────────────────
+      - name: Export gold marts to data/served/*.parquet
+        run: |
+          uv run python - << 'PY'
+          import duckdb
+          from pathlib import Path
+
+          served = Path("data/served")
+          served.mkdir(parents=True, exist_ok=True)
+
+          conn = duckdb.connect("data/fashion_retail.duckdb", read_only=True)
+          marts = [
+              "dim_date", "dim_product", "dim_store", "dim_customer",
+              "dim_channel", "dim_promotion",
+              "fct_sales", "fct_inventory_snapshot", "fct_returns",
+              "fct_web_events", "fct_markdown",
+          ]
+          for m in marts:
+              out = served / f"{m}.parquet"
+              conn.execute(
+                  f"COPY (SELECT * FROM marts.{m}) "
+                  f"TO '{out}' (FORMAT PARQUET, COMPRESSION SNAPPY)"
+              )
+              rows = conn.execute(f"SELECT COUNT(*) FROM marts.{m}").fetchone()[0]
+              print(f"  {m:<35} {rows:>10,} rows → {out.name}")
+          conn.close()
+          PY
+
+      # ── Step 5: Upload snapshot to Cloudflare R2 (conditional) ─────────────
+      - name: Upload snapshot to R2
+        if: ${{ env.R2_ACCOUNT_ID != '' }}
+        env:
+          R2_ACCOUNT_ID:       ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID:    ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_SERVED_BUCKET:    ${{ secrets.R2_SERVED_BUCKET || 'fashion-retail-served' }}
+        run: |
+          uv run python -m ingestion.upload_r2 \
+            --input-dir data/served \
+            --bucket    "$R2_SERVED_BUCKET" \
+            --prefix    snapshot
+
+      # ── Step 6: Persist snapshot as a workflow artifact ────────────────────
+      - name: Upload snapshot as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gold-snapshot-${{ github.run_id }}
+          path: data/served/
+          retention-days: 30

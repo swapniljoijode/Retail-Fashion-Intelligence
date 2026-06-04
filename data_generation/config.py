@@ -10,11 +10,11 @@ class VolumeConfig:
     seed: int
     start_date: date
     end_date: date
-    n_styles: int           # unique product styles before size expansion
+    n_styles: int  # unique product styles before size expansion
     n_stores: int
     n_customers: int
     n_promotions: int
-    avg_daily_orders: int   # base daily order volume before seasonal adjustment
+    avg_daily_orders: int  # base daily order volume before seasonal adjustment
 
 
 # One month, tiny counts — used exclusively by pytest for speed

@@ -1,8 +1,6 @@
 """Tests for dimension generators — schema, uniqueness, and value ranges."""
-from __future__ import annotations
 
-import pandas as pd
-import pytest
+from __future__ import annotations
 
 from data_generation.taxonomy import BUYING_SEASONS, CATEGORIES, CHANNEL_SEED
 
@@ -14,10 +12,22 @@ class TestDimDate:
 
     def test_required_columns(self, dims):
         required = {
-            "date_key", "date", "day_of_week", "day_name", "day_of_month",
-            "day_of_year", "week_of_year", "month_number", "month_name",
-            "quarter_number", "year", "retail_season", "calendar_season",
-            "is_weekend", "is_public_holiday", "holiday_name",
+            "date_key",
+            "date",
+            "day_of_week",
+            "day_name",
+            "day_of_month",
+            "day_of_year",
+            "week_of_year",
+            "month_number",
+            "month_name",
+            "quarter_number",
+            "year",
+            "retail_season",
+            "calendar_season",
+            "is_weekend",
+            "is_public_holiday",
+            "holiday_name",
         }
         assert required.issubset(set(dims["dim_date"].columns))
 
@@ -45,9 +55,21 @@ class TestDimProduct:
 
     def test_required_columns(self, dims):
         required = {
-            "product_key", "product_id", "sku", "product_name", "category",
-            "subcategory", "brand", "color", "size", "season", "cost_price",
-            "retail_price", "margin_pct", "is_current", "effective_date",
+            "product_key",
+            "product_id",
+            "sku",
+            "product_name",
+            "category",
+            "subcategory",
+            "brand",
+            "color",
+            "size",
+            "season",
+            "cost_price",
+            "retail_price",
+            "margin_pct",
+            "is_current",
+            "effective_date",
         }
         assert required.issubset(set(dims["dim_product"].columns))
 
@@ -63,18 +85,18 @@ class TestDimProduct:
         assert (dims["dim_product"]["retail_price"] > 0).all()
 
     def test_cost_less_than_retail(self, dims):
-        assert (dims["dim_product"]["cost_price"] < dims["dim_product"]["retail_price"]).all()
+        assert (
+            dims["dim_product"]["cost_price"] < dims["dim_product"]["retail_price"]
+        ).all()
 
     def test_margin_between_zero_and_one(self, dims):
         assert dims["dim_product"]["margin_pct"].between(0, 1).all()
 
     def test_exactly_one_current_row_per_product_id(self, dims):
-        current_counts = (
-            dims["dim_product"]
-            .groupby("product_id")["is_current"]
-            .sum()
-        )
-        assert (current_counts == 1).all(), "Each product_id must have exactly one current row"
+        current_counts = dims["dim_product"].groupby("product_id")["is_current"].sum()
+        assert (
+            current_counts == 1
+        ).all(), "Each product_id must have exactly one current row"
 
     def test_scd_versions_have_non_null_expiry(self, dims):
         non_current = dims["dim_product"][~dims["dim_product"]["is_current"]]
@@ -90,7 +112,15 @@ class TestDimStore:
         assert len(dims["dim_store"]) == config.n_stores
 
     def test_required_columns(self, dims):
-        required = {"store_key", "store_id", "store_name", "region", "city", "store_type", "square_footage"}
+        required = {
+            "store_key",
+            "store_id",
+            "store_name",
+            "region",
+            "city",
+            "store_type",
+            "square_footage",
+        }
         assert required.issubset(set(dims["dim_store"].columns))
 
     def test_square_footage_positive(self, dims):
@@ -107,8 +137,13 @@ class TestDimCustomer:
 
     def test_required_columns(self, dims):
         required = {
-            "customer_key", "customer_id", "customer_segment", "loyalty_tier",
-            "acquisition_channel", "first_purchase_date", "is_current",
+            "customer_key",
+            "customer_id",
+            "customer_segment",
+            "loyalty_tier",
+            "acquisition_channel",
+            "first_purchase_date",
+            "is_current",
         }
         assert required.issubset(set(dims["dim_customer"].columns))
 

@@ -1,4 +1,5 @@
 """Generators for all six conformed dimensions."""
+
 from __future__ import annotations
 
 from datetime import date, timedelta
@@ -19,7 +20,6 @@ from data_generation.taxonomy import (
     CUSTOMER_SEGMENTS,
     LOYALTY_TIERS,
     LOYALTY_WEIGHTS,
-    MONTHLY_DEMAND,
     NAMED_PROMOTIONS,
     SEASON_MONTHS,
     SEGMENT_WEIGHTS,
@@ -28,7 +28,6 @@ from data_generation.taxonomy import (
     UK_CITIES_BY_REGION,
     UK_REGIONS,
 )
-
 
 # ── dim_date ──────────────────────────────────────────────────────────────────
 
@@ -59,7 +58,9 @@ def generate_dim_date(config: VolumeConfig) -> pd.DataFrame:
     df["_date_only"] = df["date"].dt.date
     df["is_public_holiday"] = df["_date_only"].isin(holiday_map.keys())
     df["holiday_name"] = df["_date_only"].map(holiday_map)
-    df["trading_day_of_week"] = df["day_of_week"].where(df["day_of_week"] <= 5, other=None)
+    df["trading_day_of_week"] = df["day_of_week"].where(
+        df["day_of_week"] <= 5, other=None
+    )
 
     return df.drop(columns=["_date_only"]).reset_index(drop=True)
 
@@ -79,9 +80,9 @@ def _uk_public_holidays(start_year: int, end_year: int) -> list[tuple[date, str]
     rows = []
     for y in range(start_year, end_year + 1):
         rows += [
-            (date(y, 1, 1),  "New Year's Day"),
-            (date(y, 5, 27), "Spring Bank Holiday"),   # approximate
-            (date(y, 8, 26), "Summer Bank Holiday"),   # approximate
+            (date(y, 1, 1), "New Year's Day"),
+            (date(y, 5, 27), "Spring Bank Holiday"),  # approximate
+            (date(y, 8, 26), "Summer Bank Holiday"),  # approximate
             (date(y, 12, 25), "Christmas Day"),
             (date(y, 12, 26), "Boxing Day"),
         ]
@@ -91,7 +92,9 @@ def _uk_public_holidays(start_year: int, end_year: int) -> list[tuple[date, str]
 # ── dim_product ───────────────────────────────────────────────────────────────
 
 
-def generate_dim_product(config: VolumeConfig, rng: np.random.Generator) -> pd.DataFrame:
+def generate_dim_product(
+    config: VolumeConfig, rng: np.random.Generator
+) -> pd.DataFrame:
     """
     Product dimension with SCD Type 2 on retail_price.
 
@@ -102,7 +105,9 @@ def generate_dim_product(config: VolumeConfig, rng: np.random.Generator) -> pd.D
     category_names = list(CATEGORIES.keys())
     cat_weights = [CATEGORIES[c]["category_weight"] for c in category_names]
     cat_weights_norm = [w / sum(cat_weights) for w in cat_weights]
-    style_categories = rng.choice(category_names, size=config.n_styles, p=cat_weights_norm)
+    style_categories = rng.choice(
+        category_names, size=config.n_styles, p=cat_weights_norm
+    )
 
     product_key = 1
     sku_counter = 1
@@ -152,41 +157,47 @@ def generate_dim_product(config: VolumeConfig, rng: np.random.Generator) -> pd.D
 
             if has_price_change and price_change_date is not None:
                 # Version 1 — original price, now expired
-                rows.append({
-                    "product_key": product_key,
-                    **base,
-                    "retail_price": retail_price,
-                    "margin_pct": round(margin, 4),
-                    "is_current": False,
-                    "effective_date": config.start_date,
-                    "expiry_date": price_change_date - timedelta(days=1),
-                })
+                rows.append(
+                    {
+                        "product_key": product_key,
+                        **base,
+                        "retail_price": retail_price,
+                        "margin_pct": round(margin, 4),
+                        "is_current": False,
+                        "effective_date": config.start_date,
+                        "expiry_date": price_change_date - timedelta(days=1),
+                    }
+                )
                 product_key += 1
 
                 new_price = _charm_price(retail_price * float(rng.uniform(0.85, 1.20)))
                 new_margin = round((new_price - cost_price) / new_price, 4)
 
                 # Version 2 — current price
-                rows.append({
-                    "product_key": product_key,
-                    **base,
-                    "retail_price": new_price,
-                    "margin_pct": new_margin,
-                    "is_current": True,
-                    "effective_date": price_change_date,
-                    "expiry_date": None,
-                })
+                rows.append(
+                    {
+                        "product_key": product_key,
+                        **base,
+                        "retail_price": new_price,
+                        "margin_pct": new_margin,
+                        "is_current": True,
+                        "effective_date": price_change_date,
+                        "expiry_date": None,
+                    }
+                )
                 product_key += 1
             else:
-                rows.append({
-                    "product_key": product_key,
-                    **base,
-                    "retail_price": retail_price,
-                    "margin_pct": round(margin, 4),
-                    "is_current": True,
-                    "effective_date": config.start_date,
-                    "expiry_date": None,
-                })
+                rows.append(
+                    {
+                        "product_key": product_key,
+                        **base,
+                        "retail_price": retail_price,
+                        "margin_pct": round(margin, 4),
+                        "is_current": True,
+                        "effective_date": config.start_date,
+                        "expiry_date": None,
+                    }
+                )
                 product_key += 1
 
     return pd.DataFrame(rows)
@@ -225,17 +236,19 @@ def generate_dim_store(config: VolumeConfig, rng: np.random.Generator) -> pd.Dat
         opening_year = int(rng.integers(2010, 2024))
         opening_date = date(opening_year, int(rng.integers(1, 13)), 1)
 
-        rows.append({
-            "store_key": i + 1,
-            "store_id": f"STR-{i + 1:03d}",
-            "store_name": f"{city} {store_type.replace('_', ' ').title()}",
-            "region": region,
-            "city": city,
-            "country": "GB",
-            "store_type": store_type,
-            "square_footage": sqft,
-            "opening_date": opening_date,
-        })
+        rows.append(
+            {
+                "store_key": i + 1,
+                "store_id": f"STR-{i + 1:03d}",
+                "store_name": f"{city} {store_type.replace('_', ' ').title()}",
+                "region": region,
+                "city": city,
+                "country": "GB",
+                "store_type": store_type,
+                "square_footage": sqft,
+                "opening_date": opening_date,
+            }
+        )
 
     return pd.DataFrame(rows)
 
@@ -243,7 +256,9 @@ def generate_dim_store(config: VolumeConfig, rng: np.random.Generator) -> pd.Dat
 # ── dim_customer ──────────────────────────────────────────────────────────────
 
 
-def generate_dim_customer(config: VolumeConfig, rng: np.random.Generator) -> pd.DataFrame:
+def generate_dim_customer(
+    config: VolumeConfig, rng: np.random.Generator
+) -> pd.DataFrame:
     """
     Customer dimension with SCD Type 2 on customer_segment.
 
@@ -274,7 +289,9 @@ def generate_dim_customer(config: VolumeConfig, rng: np.random.Generator) -> pd.
         has_segment_change = rng.random() < 0.15
         segment_change_date: date | None = None
         if has_segment_change:
-            change_offset = int(rng.integers(days_offset + 10, max(days_offset + 11, period_days - 10)))
+            change_offset = int(
+                rng.integers(days_offset + 10, max(days_offset + 11, period_days - 10))
+            )
             segment_change_date = config.start_date + timedelta(days=change_offset)
 
         base = {
@@ -287,14 +304,16 @@ def generate_dim_customer(config: VolumeConfig, rng: np.random.Generator) -> pd.
         }
 
         if has_segment_change and segment_change_date is not None:
-            rows.append({
-                "customer_key": customer_key,
-                **base,
-                "customer_segment": segment,
-                "is_current": False,
-                "effective_date": config.start_date,
-                "expiry_date": segment_change_date - timedelta(days=1),
-            })
+            rows.append(
+                {
+                    "customer_key": customer_key,
+                    **base,
+                    "customer_segment": segment,
+                    "is_current": False,
+                    "effective_date": config.start_date,
+                    "expiry_date": segment_change_date - timedelta(days=1),
+                }
+            )
             customer_key += 1
 
             # Pass full list with the current segment zeroed out so numpy
@@ -303,24 +322,28 @@ def generate_dim_customer(config: VolumeConfig, rng: np.random.Generator) -> pd.
                 CUSTOMER_SEGMENTS,
                 p=_reweight(SEGMENT_WEIGHTS, CUSTOMER_SEGMENTS, segment),
             )
-            rows.append({
-                "customer_key": customer_key,
-                **base,
-                "customer_segment": new_segment,
-                "is_current": True,
-                "effective_date": segment_change_date,
-                "expiry_date": None,
-            })
+            rows.append(
+                {
+                    "customer_key": customer_key,
+                    **base,
+                    "customer_segment": new_segment,
+                    "is_current": True,
+                    "effective_date": segment_change_date,
+                    "expiry_date": None,
+                }
+            )
             customer_key += 1
         else:
-            rows.append({
-                "customer_key": customer_key,
-                **base,
-                "customer_segment": segment,
-                "is_current": True,
-                "effective_date": config.start_date,
-                "expiry_date": None,
-            })
+            rows.append(
+                {
+                    "customer_key": customer_key,
+                    **base,
+                    "customer_segment": segment,
+                    "is_current": True,
+                    "effective_date": config.start_date,
+                    "expiry_date": None,
+                }
+            )
             customer_key += 1
 
     return pd.DataFrame(rows)
@@ -346,7 +369,9 @@ def generate_dim_channel() -> pd.DataFrame:
 # ── dim_promotion ─────────────────────────────────────────────────────────────
 
 
-def generate_dim_promotion(config: VolumeConfig, rng: np.random.Generator) -> pd.DataFrame:
+def generate_dim_promotion(
+    config: VolumeConfig, rng: np.random.Generator
+) -> pd.DataFrame:
     """
     Promotion dimension.
 
@@ -371,7 +396,13 @@ def generate_dim_promotion(config: VolumeConfig, rng: np.random.Generator) -> pd
         }
     ]
 
-    for key_idx, (name, promo_type, peak_month, discount_pct, duration_days) in enumerate(chosen, start=1):
+    for key_idx, (
+        name,
+        promo_type,
+        peak_month,
+        discount_pct,
+        duration_days,
+    ) in enumerate(chosen, start=1):
         # Anchor start_date to the peak_month within the config period
         for year in range(config.start_date.year, config.end_date.year + 1):
             month = peak_month
@@ -384,16 +415,18 @@ def generate_dim_promotion(config: VolumeConfig, rng: np.random.Generator) -> pd
                 continue
 
             end = min(start + timedelta(days=duration_days - 1), config.end_date)
-            rows.append({
-                "promotion_key": key_idx,
-                "promotion_id": f"PRM-{key_idx:03d}",
-                "promotion_name": name,
-                "promotion_type": promo_type,
-                "discount_pct": discount_pct,
-                "start_date": start,
-                "end_date": end,
-                "is_sitewide": rng.random() < 0.40,
-            })
+            rows.append(
+                {
+                    "promotion_key": key_idx,
+                    "promotion_id": f"PRM-{key_idx:03d}",
+                    "promotion_name": name,
+                    "promotion_type": promo_type,
+                    "discount_pct": discount_pct,
+                    "start_date": start,
+                    "end_date": end,
+                    "is_sitewide": rng.random() < 0.40,
+                }
+            )
             break  # one occurrence per promotion per period
 
     return pd.DataFrame(rows)

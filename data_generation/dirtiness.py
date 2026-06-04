@@ -13,6 +13,7 @@ Issues applied:
   fact_returns    - 0.5 % duplicate rows
   fact_inventory  - 2 % type-drifted units_on_hand (int → string)
 """
+
 from __future__ import annotations
 
 import numpy as np

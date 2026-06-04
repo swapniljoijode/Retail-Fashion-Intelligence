@@ -5,6 +5,7 @@ Usage:
     python -m data_generation.main --volume large
     python -m data_generation.main --volume small --seed 99 --output-dir ./my_output
 """
+
 from __future__ import annotations
 
 import argparse
@@ -43,17 +44,25 @@ log = logging.getLogger(__name__)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate synthetic fashion retail data")
+    parser = argparse.ArgumentParser(
+        description="Generate synthetic fashion retail data"
+    )
     parser.add_argument(
-        "--volume", choices=["test", "small", "large"], default="small",
+        "--volume",
+        choices=["test", "small", "large"],
+        default="small",
         help="Data volume profile (default: small)",
     )
     parser.add_argument(
-        "--seed", type=int, default=None,
+        "--seed",
+        type=int,
+        default=None,
         help="Override the profile's random seed",
     )
     parser.add_argument(
-        "--output-dir", type=Path, default=Path("data_generation/output"),
+        "--output-dir",
+        type=Path,
+        default=Path("data_generation/output"),
         help="Root output directory (default: data_generation/output)",
     )
     args = parser.parse_args()
@@ -64,23 +73,31 @@ def main() -> None:
 
     rng = np.random.default_rng(config.seed)
 
-    log.info("Volume=%s  seed=%d  %s → %s", config.name, config.seed, config.start_date, config.end_date)
+    log.info(
+        "Volume=%s  seed=%d  %s → %s",
+        config.name,
+        config.seed,
+        config.start_date,
+        config.end_date,
+    )
     t0 = time.perf_counter()
 
     # ── Dimensions ────────────────────────────────────────────────────────────
     log.info("Generating dimensions …")
     dims: dict = {
-        "dim_date":      generate_dim_date(config),
-        "dim_product":   generate_dim_product(config, rng),
-        "dim_store":     generate_dim_store(config, rng),
-        "dim_customer":  generate_dim_customer(config, rng),
-        "dim_channel":   generate_dim_channel(),
+        "dim_date": generate_dim_date(config),
+        "dim_product": generate_dim_product(config, rng),
+        "dim_store": generate_dim_store(config, rng),
+        "dim_customer": generate_dim_customer(config, rng),
+        "dim_channel": generate_dim_channel(),
         "dim_promotion": generate_dim_promotion(config, rng),
     }
     log.info("  dim_date      %6d rows", len(dims["dim_date"]))
     log.info("  dim_product   %6d rows  (incl. SCD versions)", len(dims["dim_product"]))
     log.info("  dim_store     %6d rows", len(dims["dim_store"]))
-    log.info("  dim_customer  %6d rows  (incl. SCD versions)", len(dims["dim_customer"]))
+    log.info(
+        "  dim_customer  %6d rows  (incl. SCD versions)", len(dims["dim_customer"])
+    )
     log.info("  dim_channel   %6d rows", len(dims["dim_channel"]))
     log.info("  dim_promotion %6d rows", len(dims["dim_promotion"]))
 
