@@ -33,7 +33,8 @@ data_generation/output/
 *.parquet
 
 # ── DuckDB warehouse files ─────────────────────────────────────────────────────
-data/
+# Anchored to repo root — only ignores /data/, NOT dashboard/public/data/
+/data/
 *.duckdb
 *.duckdb.wal
 

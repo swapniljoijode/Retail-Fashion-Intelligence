@@ -1,0 +1,592 @@
+{
+  "weekly_inventory": [
+    {
+      "year": 2024,
+      "week_num": 1,
+      "week_start": "2024-01-01",
+      "label": "W01 2024",
+      "avg_units_on_hand": 118.87745726495727,
+      "stockout_rate": 0.0,
+      "units_in_transit": 9200
+    },
+    {
+      "year": 2024,
+      "week_num": 2,
+      "week_start": "2024-01-08",
+      "label": "W02 2024",
+      "avg_units_on_hand": 25.659065934065936,
+      "stockout_rate": 0.0002747252747252747,
+      "units_in_transit": 25891
+    },
+    {
+      "year": 2024,
+      "week_num": 3,
+      "week_start": "2024-01-15",
+      "label": "W03 2024",
+      "avg_units_on_hand": 34.78186813186813,
+      "stockout_rate": 0.00013736263736263736,
+      "units_in_transit": 40225
+    },
+    {
+      "year": 2024,
+      "week_num": 4,
+      "week_start": "2024-01-22",
+      "label": "W04 2024",
+      "avg_units_on_hand": 45.004120879120876,
+      "stockout_rate": 0.0,
+      "units_in_transit": 25208
+    },
+    {
+      "year": 2024,
+      "week_num": 5,
+      "week_start": "2024-01-29",
+      "label": "W05 2024",
+      "avg_units_on_hand": 51.33228021978022,
+      "stockout_rate": 0.00013736263736263736,
+      "units_in_transit": 32550
+    },
+    {
+      "year": 2024,
+      "week_num": 6,
+      "week_start": "2024-02-05",
+      "label": "W06 2024",
+      "avg_units_on_hand": 60.56222527472527,
+      "stockout_rate": 0.0008241758241758242,
+      "units_in_transit": 37848
+    },
+    {
+      "year": 2024,
+      "week_num": 7,
+      "week_start": "2024-02-12",
+      "label": "W07 2024",
+      "avg_units_on_hand": 70.02307692307693,
+      "stockout_rate": 0.0,
+      "units_in_transit": 24653
+    },
+    {
+      "year": 2024,
+      "week_num": 8,
+      "week_start": "2024-02-19",
+      "label": "W08 2024",
+      "avg_units_on_hand": 77.63021978021978,
+      "stockout_rate": 0.0005494505494505495,
+      "units_in_transit": 33319
+    },
+    {
+      "year": 2024,
+      "week_num": 9,
+      "week_start": "2024-02-26",
+      "label": "W09 2024",
+      "avg_units_on_hand": 86.3004120879121,
+      "stockout_rate": 0.0,
+      "units_in_transit": 35435
+    },
+    {
+      "year": 2024,
+      "week_num": 10,
+      "week_start": "2024-03-04",
+      "label": "W10 2024",
+      "avg_units_on_hand": 95.32431318681319,
+      "stockout_rate": 0.0,
+      "units_in_transit": 27836
+    },
+    {
+      "year": 2024,
+      "week_num": 11,
+      "week_start": "2024-03-11",
+      "label": "W11 2024",
+      "avg_units_on_hand": 102.73516483516484,
+      "stockout_rate": 0.0,
+      "units_in_transit": 30604
+    },
+    {
+      "year": 2024,
+      "week_num": 12,
+      "week_start": "2024-03-18",
+      "label": "W12 2024",
+      "avg_units_on_hand": 111.0260989010989,
+      "stockout_rate": 0.0,
+      "units_in_transit": 34175
+    },
+    {
+      "year": 2024,
+      "week_num": 13,
+      "week_start": "2024-03-25",
+      "label": "W13 2024",
+      "avg_units_on_hand": 118.9114010989011,
+      "stockout_rate": 0.0,
+      "units_in_transit": 33974
+    },
+    {
+      "year": 2024,
+      "week_num": 14,
+      "week_start": "2024-04-01",
+      "label": "W14 2024",
+      "avg_units_on_hand": 126.88475274725275,
+      "stockout_rate": 0.0,
+      "units_in_transit": 28278
+    },
+    {
+      "year": 2024,
+      "week_num": 15,
+      "week_start": "2024-04-08",
+      "label": "W15 2024",
+      "avg_units_on_hand": 135.84601648351648,
+      "stockout_rate": 0.0004120879120879121,
+      "units_in_transit": 34216
+    },
+    {
+      "year": 2024,
+      "week_num": 16,
+      "week_start": "2024-04-15",
+      "label": "W16 2024",
+      "avg_units_on_hand": 143.1125,
+      "stockout_rate": 0.0008241758241758242,
+      "units_in_transit": 34852
+    },
+    {
+      "year": 2024,
+      "week_num": 17,
+      "week_start": "2024-04-22",
+      "label": "W17 2024",
+      "avg_units_on_hand": 151.9201923076923,
+      "stockout_rate": 0.0009615384615384616,
+      "units_in_transit": 18752
+    },
+    {
+      "year": 2024,
+      "week_num": 18,
+      "week_start": "2024-04-29",
+      "label": "W18 2024",
+      "avg_units_on_hand": 160.36620879120878,
+      "stockout_rate": 0.0004120879120879121,
+      "units_in_transit": 39625
+    },
+    {
+      "year": 2024,
+      "week_num": 19,
+      "week_start": "2024-05-06",
+      "label": "W19 2024",
+      "avg_units_on_hand": 167.38543956043955,
+      "stockout_rate": 0.0005494505494505495,
+      "units_in_transit": 35348
+    },
+    {
+      "year": 2024,
+      "week_num": 20,
+      "week_start": "2024-05-13",
+      "label": "W20 2024",
+      "avg_units_on_hand": 176.8379120879121,
+      "stockout_rate": 0.0012362637362637362,
+      "units_in_transit": 24873
+    },
+    {
+      "year": 2024,
+      "week_num": 21,
+      "week_start": "2024-05-20",
+      "label": "W21 2024",
+      "avg_units_on_hand": 184.37321428571428,
+      "stockout_rate": 0.0013736263736263737,
+      "units_in_transit": 41965
+    },
+    {
+      "year": 2024,
+      "week_num": 22,
+      "week_start": "2024-05-27",
+      "label": "W22 2024",
+      "avg_units_on_hand": 192.9510989010989,
+      "stockout_rate": 0.0,
+      "units_in_transit": 24494
+    },
+    {
+      "year": 2024,
+      "week_num": 23,
+      "week_start": "2024-06-03",
+      "label": "W23 2024",
+      "avg_units_on_hand": 201.31758241758243,
+      "stockout_rate": 0.0013736263736263737,
+      "units_in_transit": 34786
+    },
+    {
+      "year": 2024,
+      "week_num": 24,
+      "week_start": "2024-06-10",
+      "label": "W24 2024",
+      "avg_units_on_hand": 209.66291208791208,
+      "stockout_rate": 0.001510989010989011,
+      "units_in_transit": 27782
+    },
+    {
+      "year": 2024,
+      "week_num": 25,
+      "week_start": "2024-06-17",
+      "label": "W25 2024",
+      "avg_units_on_hand": 218.67046703296703,
+      "stockout_rate": 0.0006868131868131869,
+      "units_in_transit": 30058
+    },
+    {
+      "year": 2024,
+      "week_num": 26,
+      "week_start": "2024-06-24",
+      "label": "W26 2024",
+      "avg_units_on_hand": 224.30645604395605,
+      "stockout_rate": 0.0009615384615384616,
+      "units_in_transit": 46873
+    },
+    {
+      "year": 2024,
+      "week_num": 27,
+      "week_start": "2024-07-01",
+      "label": "W27 2024",
+      "avg_units_on_hand": 236.19684065934067,
+      "stockout_rate": 0.0002747252747252747,
+      "units_in_transit": 19391
+    },
+    {
+      "year": 2024,
+      "week_num": 28,
+      "week_start": "2024-07-08",
+      "label": "W28 2024",
+      "avg_units_on_hand": 241.95164835164834,
+      "stockout_rate": 0.0009615384615384616,
+      "units_in_transit": 33176
+    },
+    {
+      "year": 2024,
+      "week_num": 29,
+      "week_start": "2024-07-15",
+      "label": "W29 2024",
+      "avg_units_on_hand": 250.51483516483518,
+      "stockout_rate": 0.0008241758241758242,
+      "units_in_transit": 31519
+    },
+    {
+      "year": 2024,
+      "week_num": 30,
+      "week_start": "2024-07-22",
+      "label": "W30 2024",
+      "avg_units_on_hand": 257.13296703296703,
+      "stockout_rate": 0.001098901098901099,
+      "units_in_transit": 37333
+    },
+    {
+      "year": 2024,
+      "week_num": 31,
+      "week_start": "2024-07-29",
+      "label": "W31 2024",
+      "avg_units_on_hand": 267.68461538461537,
+      "stockout_rate": 0.0002747252747252747,
+      "units_in_transit": 23306
+    },
+    {
+      "year": 2024,
+      "week_num": 32,
+      "week_start": "2024-08-05",
+      "label": "W32 2024",
+      "avg_units_on_hand": 273.97802197802196,
+      "stockout_rate": 0.0,
+      "units_in_transit": 38385
+    },
+    {
+      "year": 2024,
+      "week_num": 33,
+      "week_start": "2024-08-12",
+      "label": "W33 2024",
+      "avg_units_on_hand": 284.59697802197803,
+      "stockout_rate": 0.0,
+      "units_in_transit": 31115
+    },
+    {
+      "year": 2024,
+      "week_num": 34,
+      "week_start": "2024-08-19",
+      "label": "W34 2024",
+      "avg_units_on_hand": 292.24354395604394,
+      "stockout_rate": 0.0,
+      "units_in_transit": 20638
+    },
+    {
+      "year": 2024,
+      "week_num": 35,
+      "week_start": "2024-08-26",
+      "label": "W35 2024",
+      "avg_units_on_hand": 300.9353021978022,
+      "stockout_rate": 0.0006868131868131869,
+      "units_in_transit": 45648
+    },
+    {
+      "year": 2024,
+      "week_num": 36,
+      "week_start": "2024-09-02",
+      "label": "W36 2024",
+      "avg_units_on_hand": 308.8057692307692,
+      "stockout_rate": 0.0009615384615384616,
+      "units_in_transit": 21973
+    },
+    {
+      "year": 2024,
+      "week_num": 37,
+      "week_start": "2024-09-09",
+      "label": "W37 2024",
+      "avg_units_on_hand": 316.9700549450549,
+      "stockout_rate": 0.0002747252747252747,
+      "units_in_transit": 35579
+    },
+    {
+      "year": 2024,
+      "week_num": 38,
+      "week_start": "2024-09-16",
+      "label": "W38 2024",
+      "avg_units_on_hand": 325.089010989011,
+      "stockout_rate": 0.0,
+      "units_in_transit": 35128
+    },
+    {
+      "year": 2024,
+      "week_num": 39,
+      "week_start": "2024-09-23",
+      "label": "W39 2024",
+      "avg_units_on_hand": 332.88928571428573,
+      "stockout_rate": 0.0006868131868131869,
+      "units_in_transit": 33205
+    },
+    {
+      "year": 2024,
+      "week_num": 40,
+      "week_start": "2024-09-30",
+      "label": "W40 2024",
+      "avg_units_on_hand": 342.5571428571429,
+      "stockout_rate": 0.0,
+      "units_in_transit": 27273
+    },
+    {
+      "year": 2024,
+      "week_num": 41,
+      "week_start": "2024-10-07",
+      "label": "W41 2024",
+      "avg_units_on_hand": 348.4070054945055,
+      "stockout_rate": 0.0,
+      "units_in_transit": 30013
+    },
+    {
+      "year": 2024,
+      "week_num": 42,
+      "week_start": "2024-10-14",
+      "label": "W42 2024",
+      "avg_units_on_hand": 359.16153846153844,
+      "stockout_rate": 0.0,
+      "units_in_transit": 36103
+    },
+    {
+      "year": 2024,
+      "week_num": 43,
+      "week_start": "2024-10-21",
+      "label": "W43 2024",
+      "avg_units_on_hand": 364.27939560439563,
+      "stockout_rate": 0.0,
+      "units_in_transit": 32743
+    },
+    {
+      "year": 2024,
+      "week_num": 44,
+      "week_start": "2024-10-28",
+      "label": "W44 2024",
+      "avg_units_on_hand": 373.889010989011,
+      "stockout_rate": 0.0,
+      "units_in_transit": 33101
+    },
+    {
+      "year": 2024,
+      "week_num": 45,
+      "week_start": "2024-11-04",
+      "label": "W45 2024",
+      "avg_units_on_hand": 382.32843406593406,
+      "stockout_rate": 0.0,
+      "units_in_transit": 29104
+    },
+    {
+      "year": 2024,
+      "week_num": 46,
+      "week_start": "2024-11-11",
+      "label": "W46 2024",
+      "avg_units_on_hand": 387.30315934065936,
+      "stockout_rate": 0.0,
+      "units_in_transit": 31172
+    },
+    {
+      "year": 2024,
+      "week_num": 47,
+      "week_start": "2024-11-18",
+      "label": "W47 2024",
+      "avg_units_on_hand": 398.38021978021976,
+      "stockout_rate": 0.0005494505494505495,
+      "units_in_transit": 30449
+    },
+    {
+      "year": 2024,
+      "week_num": 48,
+      "week_start": "2024-11-25",
+      "label": "W48 2024",
+      "avg_units_on_hand": 404.6892857142857,
+      "stockout_rate": 0.0,
+      "units_in_transit": 25459
+    },
+    {
+      "year": 2024,
+      "week_num": 49,
+      "week_start": "2024-12-02",
+      "label": "W49 2024",
+      "avg_units_on_hand": 410.52156593406596,
+      "stockout_rate": 0.0,
+      "units_in_transit": 48702
+    },
+    {
+      "year": 2024,
+      "week_num": 50,
+      "week_start": "2024-12-09",
+      "label": "W50 2024",
+      "avg_units_on_hand": 421.32211538461536,
+      "stockout_rate": 0.0,
+      "units_in_transit": 19867
+    },
+    {
+      "year": 2024,
+      "week_num": 51,
+      "week_start": "2024-12-16",
+      "label": "W51 2024",
+      "avg_units_on_hand": 428.08324175824174,
+      "stockout_rate": 0.0002747252747252747,
+      "units_in_transit": 27945
+    },
+    {
+      "year": 2024,
+      "week_num": 52,
+      "week_start": "2024-12-23",
+      "label": "W52 2024",
+      "avg_units_on_hand": 434.1633241758242,
+      "stockout_rate": 0.0006868131868131869,
+      "units_in_transit": 46508
+    }
+  ],
+  "sell_through": [
+    {
+      "category": "Tops",
+      "units_sold": 28297,
+      "avg_stock": 197.6623690801457,
+      "sell_through_rate": 0.9930631791133405
+    },
+    {
+      "category": "Bottoms",
+      "units_sold": 30372,
+      "avg_stock": 221.89648224043717,
+      "sell_through_rate": 0.9927470342860953
+    },
+    {
+      "category": "Outerwear",
+      "units_sold": 20227,
+      "avg_stock": 242.64577641165755,
+      "sell_through_rate": 0.9881460686197476
+    },
+    {
+      "category": "Dresses",
+      "units_sold": 14004,
+      "avg_stock": 223.63918488160292,
+      "sell_through_rate": 0.984281356732799
+    },
+    {
+      "category": "Footwear",
+      "units_sold": 15715,
+      "avg_stock": 259.70668667056987,
+      "sell_through_rate": 0.9837426319140324
+    },
+    {
+      "category": "Accessories",
+      "units_sold": 1226,
+      "avg_stock": 234.39207650273224,
+      "sell_through_rate": 0.8395005832515596
+    }
+  ],
+  "stockout_by_category": [
+    {
+      "category": "Tops",
+      "stockout_rate": 0.0015368852459016393,
+      "stockout_days": 108,
+      "total_days": 70272
+    },
+    {
+      "category": "Dresses",
+      "stockout_rate": 0.0003187613843351548,
+      "stockout_days": 14,
+      "total_days": 43920
+    },
+    {
+      "category": "Bottoms",
+      "stockout_rate": 0.0002504553734061931,
+      "stockout_days": 22,
+      "total_days": 87840
+    },
+    {
+      "category": "Accessories",
+      "stockout_rate": 0.0,
+      "stockout_days": 0,
+      "total_days": 8784
+    },
+    {
+      "category": "Footwear",
+      "stockout_rate": 0.0,
+      "stockout_days": 0,
+      "total_days": 81984
+    },
+    {
+      "category": "Outerwear",
+      "stockout_rate": 0.0,
+      "stockout_days": 0,
+      "total_days": 87840
+    }
+  ],
+  "stockout_by_store": [
+    {
+      "store_type": "standard",
+      "region": "Yorkshire",
+      "stockout_rate": 0.001639344262295082,
+      "avg_units_on_hand": 164.5846364018495
+    },
+    {
+      "store_type": "standard",
+      "region": "Scotland",
+      "stockout_rate": 0.0006935687263556116,
+      "avg_units_on_hand": 319.4400378310214
+    },
+    {
+      "store_type": "standard",
+      "region": "South East",
+      "stockout_rate": 0.0002942412778478352,
+      "avg_units_on_hand": 145.6745060949979
+    },
+    {
+      "store_type": "pop_up",
+      "region": "East Midlands",
+      "stockout_rate": 0.00017864649012189996,
+      "avg_units_on_hand": 46.98319672131147
+    },
+    {
+      "store_type": "flagship",
+      "region": "Yorkshire",
+      "stockout_rate": 4.203446826397646e-05,
+      "avg_units_on_hand": 716.3055275325767
+    },
+    {
+      "store_type": "standard",
+      "region": "West Midlands",
+      "stockout_rate": 0.0,
+      "avg_units_on_hand": 268.23327028163095
+    },
+    {
+      "store_type": "standard",
+      "region": "Greater London",
+      "stockout_rate": 0.0,
+      "avg_units_on_hand": 138.5473728457335
+    }
+  ]
+}

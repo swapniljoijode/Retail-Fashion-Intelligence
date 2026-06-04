@@ -1,0 +1,453 @@
+{
+  "monthly_trend": [
+    {
+      "year": 2024,
+      "month": 1,
+      "label": "Jan 2024",
+      "gross_revenue": 859383.2399999774,
+      "net_revenue": 762773.5599999883,
+      "discount_amount": 96609.68000000034,
+      "gross_margin": 413396.1799999975,
+      "gross_margin_pct": 0.5419644855020982,
+      "orders": 1595,
+      "units": 7900,
+      "aov": 478.2279373040679,
+      "discount_rate": 0.11241745882780177
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "label": "Feb 2024",
+      "gross_revenue": 553791.4800000029,
+      "net_revenue": 550197.9200000033,
+      "discount_amount": 3593.5599999999986,
+      "gross_margin": 334772.7799999977,
+      "gross_margin_pct": 0.6084588251442239,
+      "orders": 1379,
+      "units": 6880,
+      "aov": 398.9832632342301,
+      "discount_rate": 0.006489012795935358
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "label": "Mar 2024",
+      "gross_revenue": 778602.9999999807,
+      "net_revenue": 778602.9999999807,
+      "discount_amount": 0.0,
+      "gross_margin": 476108.8599999947,
+      "gross_margin_pct": 0.611491170725012,
+      "orders": 1956,
+      "units": 9720,
+      "aov": 398.05879345602284,
+      "discount_rate": 0.0
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "label": "Apr 2024",
+      "gross_revenue": 717095.3399999846,
+      "net_revenue": 717095.3399999846,
+      "discount_amount": 0.0,
+      "gross_margin": 438088.63999999716,
+      "gross_margin_pct": 0.6109210527013138,
+      "orders": 1815,
+      "units": 9062,
+      "aov": 395.0938512396609,
+      "discount_rate": 0.0
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "label": "May 2024",
+      "gross_revenue": 706729.3999999876,
+      "net_revenue": 704107.0499999876,
+      "discount_amount": 2622.35,
+      "gross_margin": 429500.339999998,
+      "gross_margin_pct": 0.6099929549065097,
+      "orders": 1739,
+      "units": 8824,
+      "aov": 404.8919206440412,
+      "discount_rate": 0.0037105432432838455
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "label": "Jun 2024",
+      "gross_revenue": 668132.8599999914,
+      "net_revenue": 643700.2699999948,
+      "discount_amount": 24432.59000000003,
+      "gross_margin": 384858.4099999961,
+      "gross_margin_pct": 0.597884493663486,
+      "orders": 1625,
+      "units": 8246,
+      "aov": 396.1232430769199,
+      "discount_rate": 0.03656846035083553
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "label": "Jul 2024",
+      "gross_revenue": 842423.4499999767,
+      "net_revenue": 791226.4399999881,
+      "discount_amount": 51197.01000000012,
+      "gross_margin": 463521.8399999974,
+      "gross_margin_pct": 0.5858270358103862,
+      "orders": 2059,
+      "units": 10551,
+      "aov": 384.2770471102419,
+      "discount_rate": 0.06077348630311934
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "label": "Aug 2024",
+      "gross_revenue": 769900.8899999874,
+      "net_revenue": 665309.3199999915,
+      "discount_amount": 104591.56999999908,
+      "gross_margin": 351873.0699999968,
+      "gross_margin_pct": 0.5288864283458427,
+      "orders": 1408,
+      "units": 7151,
+      "aov": 472.5208238636303,
+      "discount_rate": 0.13585069371721442
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "label": "Sep 2024",
+      "gross_revenue": 1026092.4599999698,
+      "net_revenue": 1015417.3899999704,
+      "discount_amount": 10675.069999999996,
+      "gross_margin": 597101.5099999959,
+      "gross_margin_pct": 0.5880355367953796,
+      "orders": 1894,
+      "units": 9390,
+      "aov": 536.1232259767531,
+      "discount_rate": 0.010403614114853072
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "label": "Oct 2024",
+      "gross_revenue": 1058090.6499999631,
+      "net_revenue": 1058090.6499999631,
+      "discount_amount": 0.0,
+      "gross_margin": 629516.8699999935,
+      "gross_margin_pct": 0.5949555172801266,
+      "orders": 1969,
+      "units": 9843,
+      "aov": 537.3746317927695,
+      "discount_rate": 0.0
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "label": "Nov 2024",
+      "gross_revenue": 1212928.1399999505,
+      "net_revenue": 1206976.9999999516,
+      "discount_amount": 5951.139999999997,
+      "gross_margin": 713210.0199999923,
+      "gross_margin_pct": 0.5909060570334157,
+      "orders": 2284,
+      "units": 11202,
+      "aov": 528.4487740805392,
+      "discount_rate": 0.004906424217349133
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "label": "Dec 2024",
+      "gross_revenue": 1171987.6399999612,
+      "net_revenue": 1171987.6399999612,
+      "discount_amount": 0.0,
+      "gross_margin": 695670.4099999947,
+      "gross_margin_pct": 0.5935816951107246,
+      "orders": 2215,
+      "units": 11072,
+      "aov": 529.1140586907275,
+      "discount_rate": 0.0
+    }
+  ],
+  "by_channel": [
+    {
+      "channel_name": "Standard Store",
+      "channel_type": "physical",
+      "gross_revenue": 3911760.07000044,
+      "net_revenue": 3802090.7200003993,
+      "orders": 8327,
+      "units": 41617,
+      "revenue_share": 0.37739510217143035
+    },
+    {
+      "channel_name": "Flagship Store",
+      "channel_type": "physical",
+      "gross_revenue": 2499768.5100000035,
+      "net_revenue": 2419510.9899999737,
+      "orders": 5237,
+      "units": 26425,
+      "revenue_share": 0.2411703108969742
+    },
+    {
+      "channel_name": "Amazon",
+      "channel_type": "marketplace",
+      "gross_revenue": 1220066.4999999537,
+      "net_revenue": 1186599.8999999582,
+      "orders": 2546,
+      "units": 12762,
+      "revenue_share": 0.11770842617741895
+    },
+    {
+      "channel_name": "Instagram Shop",
+      "channel_type": "digital",
+      "gross_revenue": 1218162.809999953,
+      "net_revenue": 1184681.2799999577,
+      "orders": 2591,
+      "units": 13039,
+      "revenue_share": 0.11752476376735378
+    },
+    {
+      "channel_name": "Own Website",
+      "channel_type": "digital",
+      "gross_revenue": 1195362.979999951,
+      "net_revenue": 1160504.1599999561,
+      "orders": 2560,
+      "units": 12638,
+      "revenue_share": 0.11532510325178924
+    },
+    {
+      "channel_name": "Pop-Up",
+      "channel_type": "physical",
+      "gross_revenue": 320037.68000000215,
+      "net_revenue": 312098.530000002,
+      "orders": 677,
+      "units": 3360,
+      "revenue_share": 0.030876293735033387
+    }
+  ],
+  "by_category": [
+    {
+      "category": "Outerwear",
+      "gross_revenue": 3914168.6500002192,
+      "net_revenue": 3786929.9000001876,
+      "gross_margin_pct": 0.5615669569167163,
+      "orders": 8043,
+      "units": 20227
+    },
+    {
+      "category": "Bottoms",
+      "gross_revenue": 1909513.0799998185,
+      "net_revenue": 1858964.3799998227,
+      "gross_margin_pct": 0.5902994978312245,
+      "orders": 11516,
+      "units": 30372
+    },
+    {
+      "category": "Footwear",
+      "gross_revenue": 1863776.1699998945,
+      "net_revenue": 1813523.5199999027,
+      "gross_margin_pct": 0.5698102443137796,
+      "orders": 6826,
+      "units": 15715
+    },
+    {
+      "category": "Tops",
+      "gross_revenue": 1363593.1499998863,
+      "net_revenue": 1326914.649999902,
+      "gross_margin_pct": 0.6309676737686926,
+      "orders": 10721,
+      "units": 28297
+    },
+    {
+      "category": "Dresses",
+      "gross_revenue": 1206935.799999941,
+      "net_revenue": 1175130.19999995,
+      "gross_margin_pct": 0.6518483653981619,
+      "orders": 6142,
+      "units": 14004
+    },
+    {
+      "category": "Accessories",
+      "gross_revenue": 107171.69999999978,
+      "net_revenue": 104022.92999999982,
+      "gross_margin_pct": 0.6445430829529617,
+      "orders": 591,
+      "units": 1226
+    }
+  ],
+  "top_products": [
+    {
+      "product_name": "Brixton Lane Navy Trench Coat",
+      "sku": "BRI-OUT-NAV-L",
+      "category": "Outerwear",
+      "brand": "Brixton Lane",
+      "gross_revenue": 192030.3000000004,
+      "units": 714,
+      "gross_margin_pct": 0.5636516371875081
+    },
+    {
+      "product_name": "Brixton Lane Navy Trench Coat",
+      "sku": "BRI-OUT-NAV-S",
+      "category": "Outerwear",
+      "brand": "Brixton Lane",
+      "gross_revenue": 185306.55000000028,
+      "units": 689,
+      "gross_margin_pct": 0.564483898534077
+    },
+    {
+      "product_name": "Hartley Cobalt Jacket",
+      "sku": "HAR-OUT-COB-S",
+      "category": "Outerwear",
+      "brand": "Hartley",
+      "gross_revenue": 181938.75000000026,
+      "units": 725,
+      "gross_margin_pct": 0.6032842995087513
+    },
+    {
+      "product_name": "Hartley Cobalt Jacket",
+      "sku": "HAR-OUT-COB-L",
+      "category": "Outerwear",
+      "brand": "Hartley",
+      "gross_revenue": 178425.45000000022,
+      "units": 711,
+      "gross_margin_pct": 0.6098955486155052
+    },
+    {
+      "product_name": "Plume Studio Cobalt Jacket",
+      "sku": "PLU-OUT-COB-L",
+      "category": "Outerwear",
+      "brand": "Plume Studio",
+      "gross_revenue": 178282.85000000047,
+      "units": 743,
+      "gross_margin_pct": 0.5049119778173347
+    },
+    {
+      "product_name": "Brixton Lane Navy Trench Coat",
+      "sku": "BRI-OUT-NAV-XL",
+      "category": "Outerwear",
+      "brand": "Brixton Lane",
+      "gross_revenue": 178044.90000000008,
+      "units": 662,
+      "gross_margin_pct": 0.5630397200605348
+    },
+    {
+      "product_name": "Hartley Cobalt Jacket",
+      "sku": "HAR-OUT-COB-XL",
+      "category": "Outerwear",
+      "brand": "Hartley",
+      "gross_revenue": 175414.0500000001,
+      "units": 699,
+      "gross_margin_pct": 0.6031111607357693
+    },
+    {
+      "product_name": "Hartley Cobalt Jacket",
+      "sku": "HAR-OUT-COB-M",
+      "category": "Outerwear",
+      "brand": "Hartley",
+      "gross_revenue": 174410.25000000015,
+      "units": 695,
+      "gross_margin_pct": 0.6086771038315605
+    },
+    {
+      "product_name": "Hartley Cobalt Jacket",
+      "sku": "HAR-OUT-COB-XS",
+      "category": "Outerwear",
+      "brand": "Hartley",
+      "gross_revenue": 172402.65000000008,
+      "units": 687,
+      "gross_margin_pct": 0.6040853846293176
+    },
+    {
+      "product_name": "Brixton Lane Navy Trench Coat",
+      "sku": "BRI-OUT-NAV-M",
+      "category": "Outerwear",
+      "brand": "Brixton Lane",
+      "gross_revenue": 170514.3000000001,
+      "units": 634,
+      "gross_margin_pct": 0.5529729408025083
+    }
+  ],
+  "by_promotion": [
+    {
+      "promotion_name": "No Promotion",
+      "promotion_type": null,
+      "is_no_promotion": true,
+      "orders": 20321,
+      "gross_revenue": 9574574.37000115,
+      "discount_amount": 0.0,
+      "avg_discount_rate": 0.0
+    },
+    {
+      "promotion_name": "Summer Sale",
+      "promotion_type": "pct_off",
+      "is_no_promotion": false,
+      "orders": 434,
+      "gross_revenue": 170660.97000000053,
+      "discount_amount": 51197.01000000012,
+      "avg_discount_rate": 0.29998168457466434
+    },
+    {
+      "promotion_name": "End of Season AW",
+      "promotion_type": "pct_off",
+      "is_no_promotion": false,
+      "orders": 425,
+      "gross_revenue": 232900.82000000155,
+      "discount_amount": 93160.49000000028,
+      "avg_discount_rate": 0.40000128459976647
+    },
+    {
+      "promotion_name": "Clearance",
+      "promotion_type": "pct_off",
+      "is_no_promotion": false,
+      "orders": 413,
+      "gross_revenue": 230532.470000001,
+      "discount_amount": 115266.6399999989,
+      "avg_discount_rate": 0.5000007196398047
+    },
+    {
+      "promotion_name": "Buy 2 Get 1",
+      "promotion_type": "buy_x_get_y",
+      "is_no_promotion": false,
+      "orders": 181,
+      "gross_revenue": 74038.42999999989,
+      "discount_amount": 24432.59000000003,
+      "avg_discount_rate": 0.3299919120707887
+    },
+    {
+      "promotion_name": "Cyber Monday",
+      "promotion_type": "pct_off",
+      "is_no_promotion": false,
+      "orders": 53,
+      "gross_revenue": 29755.630000000026,
+      "discount_amount": 5951.139999999997,
+      "avg_discount_rate": 0.2000005770715944
+    },
+    {
+      "promotion_name": "Bank Holiday",
+      "promotion_type": "pct_off",
+      "is_no_promotion": false,
+      "orders": 48,
+      "gross_revenue": 17482.290000000015,
+      "discount_amount": 2622.35,
+      "avg_discount_rate": 0.14998586184236157
+    },
+    {
+      "promotion_name": "Flash Sale",
+      "promotion_type": "pct_off",
+      "is_no_promotion": false,
+      "orders": 35,
+      "gross_revenue": 17967.730000000003,
+      "discount_amount": 3593.5599999999986,
+      "avg_discount_rate": 0.2000006880500609
+    },
+    {
+      "promotion_name": "Pay Day Deal",
+      "promotion_type": "pct_off",
+      "is_no_promotion": false,
+      "orders": 28,
+      "gross_revenue": 17245.840000000004,
+      "discount_amount": 3449.189999999999,
+      "avg_discount_rate": 0.20000191207078055
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "by_region": [
+    {
+      "region": "Yorkshire",
+      "stores": 2,
+      "gross_revenue": 4772839.460000744,
+      "net_revenue": 4620889.330000698,
+      "units_sold": 50398,
+      "revenue_per_store": 2386419.730000372
+    },
+    {
+      "region": "Scotland",
+      "stores": 1,
+      "gross_revenue": 1908066.359999892,
+      "net_revenue": 1855416.0199999018,
+      "units_sold": 20236,
+      "revenue_per_store": 1908066.359999892
+    },
+    {
+      "region": "West Midlands",
+      "stores": 1,
+      "gross_revenue": 1506824.4699999285,
+      "net_revenue": 1467031.9099999343,
+      "units_sold": 16037,
+      "revenue_per_store": 1506824.4699999285
+    },
+    {
+      "region": "South East",
+      "stores": 1,
+      "gross_revenue": 841465.3599999832,
+      "net_revenue": 814205.669999985,
+      "units_sold": 9080,
+      "revenue_per_store": 841465.3599999832
+    },
+    {
+      "region": "Greater London",
+      "stores": 1,
+      "gross_revenue": 828401.4499999805,
+      "net_revenue": 811814.4399999807,
+      "units_sold": 8779,
+      "revenue_per_store": 828401.4499999805
+    },
+    {
+      "region": "East Midlands",
+      "stores": 2,
+      "gross_revenue": 507561.45000000467,
+      "net_revenue": 496128.2100000039,
+      "units_sold": 5311,
+      "revenue_per_store": 253780.72500000233
+    }
+  ],
+  "by_store_type": [
+    {
+      "store_type": "standard",
+      "size_band": "large",
+      "stores": 3,
+      "avg_sqft": 4943.8343102774525,
+      "gross_revenue": 4343252.610000556,
+      "units_sold": 46059,
+      "revenue_per_store": 1447750.8700001854
+    },
+    {
+      "store_type": "flagship",
+      "size_band": "large",
+      "stores": 1,
+      "avg_sqft": 12451.0,
+      "gross_revenue": 3844477.6800004016,
+      "units_sold": 40612,
+      "revenue_per_store": 3844477.6800004016
+    },
+    {
+      "store_type": "standard",
+      "size_band": "medium",
+      "stores": 2,
+      "avg_sqft": 2736.0410684474123,
+      "gross_revenue": 1669866.8099999034,
+      "units_sold": 17859,
+      "revenue_per_store": 834933.4049999517
+    },
+    {
+      "store_type": "pop_up",
+      "size_band": "small",
+      "stores": 2,
+      "avg_sqft": 869.3351913786696,
+      "gross_revenue": 507561.45000000467,
+      "units_sold": 5311,
+      "revenue_per_store": 253780.72500000233
+    }
+  ],
+  "inventory_by_region": [
+    {
+      "region": "Yorkshire",
+      "avg_units_on_hand": 440.4450819672131,
+      "stockout_rate": 0.0008406893652795292,
+      "total_in_transit": 777720
+    },
+    {
+      "region": "Scotland",
+      "avg_units_on_hand": 319.4400378310214,
+      "stockout_rate": 0.0006935687263556116,
+      "total_in_transit": 285897
+    },
+    {
+      "region": "West Midlands",
+      "avg_units_on_hand": 268.23327028163095,
+      "stockout_rate": 0.0,
+      "total_in_transit": 238341
+    },
+    {
+      "region": "South East",
+      "avg_units_on_hand": 145.6745060949979,
+      "stockout_rate": 0.0002942412778478352,
+      "total_in_transit": 130389
+    },
+    {
+      "region": "Greater London",
+      "avg_units_on_hand": 138.5473728457335,
+      "stockout_rate": 0.0,
+      "total_in_transit": 123864
+    },
+    {
+      "region": "East Midlands",
+      "avg_units_on_hand": 46.98319672131147,
+      "stockout_rate": 0.00017864649012189996,
+      "total_in_transit": 81444
+    }
+  ],
+  "revenue_vs_stock_by_region": [
+    {
+      "region": "Yorkshire",
+      "gross_revenue": 4772839.460000744,
+      "revenue_share": 0.4604695082064614,
+      "avg_stock": 440.4450819672131,
+      "stock_share": 0.3240178611400794,
+      "revenue_stock_imbalance": 0.13645164706638196
+    },
+    {
+      "region": "East Midlands",
+      "gross_revenue": 507561.45000000467,
+      "revenue_share": 0.04896803532252563,
+      "avg_stock": 46.98319672131147,
+      "stock_share": 0.03456366192844939,
+      "revenue_stock_imbalance": 0.014404373394076242
+    },
+    {
+      "region": "Greater London",
+      "gross_revenue": 828401.4499999805,
+      "revenue_share": 0.07992173453052852,
+      "avg_stock": 138.5473728457335,
+      "stock_share": 0.1019237704177463,
+      "revenue_stock_imbalance": -0.02200203588721779
+    },
+    {
+      "region": "South East",
+      "gross_revenue": 841465.3599999832,
+      "revenue_share": 0.08118210213001903,
+      "avg_stock": 145.6745060949979,
+      "stock_share": 0.10716691778398005,
+      "revenue_stock_imbalance": -0.02598481565396102
+    },
+    {
+      "region": "Scotland",
+      "gross_revenue": 1908066.359999892,
+      "revenue_share": 0.18408462840153988,
+      "avg_stock": 319.4400378310214,
+      "stock_share": 0.23499928154089028,
+      "revenue_stock_imbalance": -0.050914653139350396
+    },
+    {
+      "region": "West Midlands",
+      "gross_revenue": 1506824.4699999285,
+      "revenue_share": 0.1453739914089255,
+      "avg_stock": 268.23327028163095,
+      "stock_share": 0.19732850718885464,
+      "revenue_stock_imbalance": -0.05195451577992913
+    }
+  ]
+}

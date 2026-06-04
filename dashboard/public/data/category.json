@@ -1,0 +1,126 @@
+{
+  "by_category": [
+    {
+      "category": "Outerwear",
+      "gross_revenue": 3914168.6500002192,
+      "net_revenue": 3786929.9000001876,
+      "gross_margin_pct": 0.5615669569167163,
+      "units_sold": 20227,
+      "discount_rate": 0.032507222191356495
+    },
+    {
+      "category": "Bottoms",
+      "gross_revenue": 1909513.0799998185,
+      "net_revenue": 1858964.3799998227,
+      "gross_margin_pct": 0.5902994978312245,
+      "units_sold": 30372,
+      "discount_rate": 0.02647203652567
+    },
+    {
+      "category": "Footwear",
+      "gross_revenue": 1863776.1699998945,
+      "net_revenue": 1813523.5199999027,
+      "gross_margin_pct": 0.5698102443137796,
+      "units_sold": 15715,
+      "discount_rate": 0.026962813887679838
+    },
+    {
+      "category": "Tops",
+      "gross_revenue": 1363593.1499998863,
+      "net_revenue": 1326914.649999902,
+      "gross_margin_pct": 0.6309676737686926,
+      "units_sold": 28297,
+      "discount_rate": 0.026898419077569378
+    },
+    {
+      "category": "Dresses",
+      "gross_revenue": 1206935.799999941,
+      "net_revenue": 1175130.19999995,
+      "gross_margin_pct": 0.6518483653981619,
+      "units_sold": 14004,
+      "discount_rate": 0.02635235445000598
+    },
+    {
+      "category": "Accessories",
+      "gross_revenue": 107171.69999999978,
+      "net_revenue": 104022.92999999982,
+      "gross_margin_pct": 0.6445430829529617,
+      "units_sold": 1226,
+      "discount_rate": 0.02938061073958895
+    }
+  ],
+  "markdown_by_category": [
+    {
+      "category": "Outerwear",
+      "avg_markdown_depth": 0.28653061224489806,
+      "units_on_markdown": 1962,
+      "revenue_on_markdown": 265659.10999999987,
+      "markdown_events": 539
+    },
+    {
+      "category": "Bottoms",
+      "avg_markdown_depth": 0.2919330289193308,
+      "units_on_markdown": 2668,
+      "revenue_on_markdown": 119743.31000000003,
+      "markdown_events": 657
+    },
+    {
+      "category": "Footwear",
+      "avg_markdown_depth": 0.28944711538461526,
+      "units_on_markdown": 1303,
+      "revenue_on_markdown": 106540.2700000001,
+      "markdown_events": 416
+    },
+    {
+      "category": "Tops",
+      "avg_markdown_depth": 0.2974657534246575,
+      "units_on_markdown": 2187,
+      "revenue_on_markdown": 77072.56999999995,
+      "markdown_events": 438
+    },
+    {
+      "category": "Dresses",
+      "avg_markdown_depth": 0.29461538461538467,
+      "units_on_markdown": 1119,
+      "revenue_on_markdown": 71385.51000000001,
+      "markdown_events": 247
+    },
+    {
+      "category": "Accessories",
+      "avg_markdown_depth": 0.28900000000000003,
+      "units_on_markdown": 61,
+      "revenue_on_markdown": 3774.49,
+      "markdown_events": 20
+    }
+  ],
+  "by_season": [
+    {
+      "season": "SS24",
+      "retail_season": "SS",
+      "gross_revenue": 3164484.9000001545,
+      "gross_margin_pct": 0.5957367257626259,
+      "units_sold": 33442
+    },
+    {
+      "season": "AW24",
+      "retail_season": "AW",
+      "gross_revenue": 3024114.0200001816,
+      "gross_margin_pct": 0.5778827576074665,
+      "units_sold": 32778
+    },
+    {
+      "season": "AW25",
+      "retail_season": "AW",
+      "gross_revenue": 2474680.130000015,
+      "gross_margin_pct": 0.5943885713877479,
+      "units_sold": 27971
+    },
+    {
+      "season": "SS25",
+      "retail_season": "SS",
+      "gross_revenue": 1701879.4999999297,
+      "gross_margin_pct": 0.5878053265086276,
+      "units_sold": 15650
+    }
+  ]
+}

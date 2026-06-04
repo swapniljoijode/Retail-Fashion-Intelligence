@@ -1,0 +1,142 @@
+{
+  "generated_at": "2026-06-04T00:57:29.996340+00:00",
+  "kpis": {
+    "gross_revenue": 10365158.5500005,
+    "net_revenue": 10065485.58000067,
+    "total_cogs": 4137866.6500010034,
+    "total_gross_margin": 5927618.930000841,
+    "gross_margin_pct": 0.5889054117546554,
+    "total_orders": 21938,
+    "total_units": 109841,
+    "aov": 458.81509618017463,
+    "return_rate_units": 0.11740606877213426,
+    "total_units_returned": 12896,
+    "total_refund_value": 1092865.9499999979,
+    "stockout_rate": 0.00037831021437578815,
+    "total_web_sessions": 250714,
+    "web_conversion_rate": 0.05026843335434,
+    "unique_customers": 300
+  },
+  "revenue_by_month": [
+    {
+      "year": 2024,
+      "month": 1,
+      "label": "Jan",
+      "gross_revenue": 859383.2399999774,
+      "net_revenue": 762773.5599999883,
+      "gross_margin": 413396.1799999975,
+      "orders": 1595,
+      "units": 7900
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "label": "Feb",
+      "gross_revenue": 553791.4800000029,
+      "net_revenue": 550197.9200000033,
+      "gross_margin": 334772.7799999977,
+      "orders": 1379,
+      "units": 6880
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "label": "Mar",
+      "gross_revenue": 778602.9999999807,
+      "net_revenue": 778602.9999999807,
+      "gross_margin": 476108.8599999947,
+      "orders": 1956,
+      "units": 9720
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "label": "Apr",
+      "gross_revenue": 717095.3399999846,
+      "net_revenue": 717095.3399999846,
+      "gross_margin": 438088.63999999716,
+      "orders": 1815,
+      "units": 9062
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "label": "May",
+      "gross_revenue": 706729.3999999876,
+      "net_revenue": 704107.0499999876,
+      "gross_margin": 429500.339999998,
+      "orders": 1739,
+      "units": 8824
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "label": "Jun",
+      "gross_revenue": 668132.8599999914,
+      "net_revenue": 643700.2699999948,
+      "gross_margin": 384858.4099999961,
+      "orders": 1625,
+      "units": 8246
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "label": "Jul",
+      "gross_revenue": 842423.4499999767,
+      "net_revenue": 791226.4399999881,
+      "gross_margin": 463521.8399999974,
+      "orders": 2059,
+      "units": 10551
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "label": "Aug",
+      "gross_revenue": 769900.8899999874,
+      "net_revenue": 665309.3199999915,
+      "gross_margin": 351873.0699999968,
+      "orders": 1408,
+      "units": 7151
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "label": "Sep",
+      "gross_revenue": 1026092.4599999698,
+      "net_revenue": 1015417.3899999704,
+      "gross_margin": 597101.5099999959,
+      "orders": 1894,
+      "units": 9390
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "label": "Oct",
+      "gross_revenue": 1058090.6499999631,
+      "net_revenue": 1058090.6499999631,
+      "gross_margin": 629516.8699999935,
+      "orders": 1969,
+      "units": 9843
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "label": "Nov",
+      "gross_revenue": 1212928.1399999505,
+      "net_revenue": 1206976.9999999516,
+      "gross_margin": 713210.0199999923,
+      "orders": 2284,
+      "units": 11202
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "label": "Dec",
+      "gross_revenue": 1171987.6399999612,
+      "net_revenue": 1171987.6399999612,
+      "gross_margin": 695670.4099999947,
+      "orders": 2215,
+      "units": 11072
+    }
+  ]
+}

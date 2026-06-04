@@ -1,0 +1,285 @@
+{
+  "monthly_sessions": [
+    {
+      "year": 2024,
+      "month": 1,
+      "label": "Jan 2024",
+      "sessions": 16484,
+      "conversions": 860,
+      "conversion_rate": 0.052171802960446496
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "label": "Feb 2024",
+      "sessions": 16177,
+      "conversions": 827,
+      "conversion_rate": 0.05112196328120171
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "label": "Mar 2024",
+      "sessions": 23976,
+      "conversions": 1208,
+      "conversion_rate": 0.05038371705038372
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "label": "Apr 2024",
+      "sessions": 21337,
+      "conversions": 1102,
+      "conversion_rate": 0.051647373107747106
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "label": "May 2024",
+      "sessions": 20291,
+      "conversions": 987,
+      "conversion_rate": 0.048642255187028735
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "label": "Jun 2024",
+      "sessions": 19195,
+      "conversions": 980,
+      "conversion_rate": 0.05105496222974733
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "label": "Jul 2024",
+      "sessions": 21464,
+      "conversions": 1050,
+      "conversion_rate": 0.04891912038762579
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "label": "Aug 2024",
+      "sessions": 14664,
+      "conversions": 737,
+      "conversion_rate": 0.05025913802509547
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "label": "Sep 2024",
+      "sessions": 21395,
+      "conversions": 1102,
+      "conversion_rate": 0.05150736153306847
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "label": "Oct 2024",
+      "sessions": 23041,
+      "conversions": 1116,
+      "conversion_rate": 0.04843539776919405
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "label": "Nov 2024",
+      "sessions": 26589,
+      "conversions": 1312,
+      "conversion_rate": 0.049343713565760276
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "label": "Dec 2024",
+      "sessions": 26101,
+      "conversions": 1322,
+      "conversion_rate": 0.05064940040611471
+    }
+  ],
+  "funnel": [
+    {
+      "event_type": "page_view",
+      "events": 250714,
+      "sessions": 250714
+    },
+    {
+      "event_type": "product_view",
+      "events": 163203,
+      "sessions": 163203
+    },
+    {
+      "event_type": "add_to_cart",
+      "events": 70496,
+      "sessions": 70496
+    },
+    {
+      "event_type": "abandon_cart",
+      "events": 57893,
+      "sessions": 57893
+    },
+    {
+      "event_type": "checkout_start",
+      "events": 30043,
+      "sessions": 30043
+    },
+    {
+      "event_type": "purchase",
+      "events": 12603,
+      "sessions": 12603
+    }
+  ],
+  "by_device": [
+    {
+      "device_type": "mobile",
+      "sessions": 145758,
+      "share": 0.5813716027026812
+    },
+    {
+      "device_type": "desktop",
+      "sessions": 87460,
+      "share": 0.3488437023859856
+    },
+    {
+      "device_type": "tablet",
+      "sessions": 17496,
+      "share": 0.06978469491133323
+    }
+  ],
+  "returns_by_reason": [
+    {
+      "return_reason": "size",
+      "returns": 3126,
+      "units_returned": 4639,
+      "refund_value": 390618.18000000075
+    },
+    {
+      "return_reason": "changed_mind",
+      "returns": 2137,
+      "units_returned": 3214,
+      "refund_value": 274797.44999999966
+    },
+    {
+      "return_reason": "quality",
+      "returns": 1675,
+      "units_returned": 2539,
+      "refund_value": 210662.7399999999
+    },
+    {
+      "return_reason": "damaged",
+      "returns": 832,
+      "units_returned": 1259,
+      "refund_value": 108728.28000000003
+    },
+    {
+      "return_reason": "late_delivery",
+      "returns": 415,
+      "units_returned": 627,
+      "refund_value": 55723.30000000001
+    },
+    {
+      "return_reason": "wrong_item",
+      "returns": 409,
+      "units_returned": 618,
+      "refund_value": 52336.0
+    }
+  ],
+  "returns_by_month": [
+    {
+      "year": 2024,
+      "month": 1,
+      "label": "Jan 2024",
+      "returns": 299,
+      "units_returned": 441,
+      "refund_value": 42768.86
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "label": "Feb 2024",
+      "returns": 612,
+      "units_returned": 915,
+      "refund_value": 79704.53999999996
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "label": "Mar 2024",
+      "returns": 644,
+      "units_returned": 934,
+      "refund_value": 73322.80999999998
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "label": "Apr 2024",
+      "returns": 776,
+      "units_returned": 1168,
+      "refund_value": 84649.78999999998
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "label": "May 2024",
+      "returns": 716,
+      "units_returned": 1061,
+      "refund_value": 78548.30000000006
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "label": "Jun 2024",
+      "returns": 675,
+      "units_returned": 990,
+      "refund_value": 76878.30999999997
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "label": "Jul 2024",
+      "returns": 732,
+      "units_returned": 1116,
+      "refund_value": 85203.50000000003
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "label": "Aug 2024",
+      "returns": 692,
+      "units_returned": 1066,
+      "refund_value": 90017.55999999997
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "label": "Sep 2024",
+      "returns": 639,
+      "units_returned": 956,
+      "refund_value": 93189.28999999998
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "label": "Oct 2024",
+      "returns": 707,
+      "units_returned": 1069,
+      "refund_value": 103357.08000000007
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "label": "Nov 2024",
+      "returns": 800,
+      "units_returned": 1192,
+      "refund_value": 107413.21999999991
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "label": "Dec 2024",
+      "returns": 1302,
+      "units_returned": 1988,
+      "refund_value": 177812.69000000024
+    }
+  ]
+}
