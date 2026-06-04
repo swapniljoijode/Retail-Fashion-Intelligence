@@ -74,8 +74,11 @@ markers = [
 
 [tool.sqlfluff.core]
 dialect = "snowflake"
-templater = "dbt"
+templater = "jinja"
 sql_file_exts = ".sql"
+
+[tool.sqlfluff.templating]
+apply_dbt_builtins = true
 
 [tool.sqlfluff.rules.capitalisation.keywords]
 capitalisation_policy = "upper"
