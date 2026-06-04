@@ -30,12 +30,17 @@ models:
       +docs:
         show: true
 
-# ── Source freshness ──────────────────────────────────────────────────────────
-# _load_timestamp in bronze is stored as VARCHAR (ISO-8601).
-# Phase 9 (Elementary) will add typed freshness monitoring.
+# ── Elementary observability hooks ───────────────────────────────────────────
+# Uploads dbt artifacts (manifest, run_results, sources) to the Elementary
+# schema after every dbt run so edr can surface test results and freshness.
+on-run-end:
+  - "{{ elementary.upload_dbt_artifacts_v2() }}"
 
 # ── Variables ─────────────────────────────────────────────────────────────────
 vars:
   # Maximum number of SCD versions expected per product / customer.
   # Used in dbt-expectations distribution tests.
   max_scd_versions: 3
+  # Elementary — days of history to keep in the monitoring tables.
+  elementary:
+    days_back: 14

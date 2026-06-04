@@ -1,0 +1,75 @@
+site_name: Fashion Retail Intelligence Platform
+site_description: End-to-end medallion data engineering — DuckDB · dbt · Airflow · Next.js
+site_author: Swapnil Joijode
+repo_url: https://github.com/swapniljoijode/Retail-Fashion-Intelligence
+repo_name: Retail-Fashion-Intelligence
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: amber
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: amber
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+  font:
+    text: Inter
+    code: JetBrains Mono
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Data Model:
+      - Metric Dictionary: metric_dictionary.md
+      - Dimensional Model: dimensional_model.md
+  - Theory Companion: theory_companion.md
+  - Operations:
+      - CI/CD Setup: ci_cd_setup.md
+      - Backfill Procedure: backfill_procedure.md
+      - Observability: observability.md
+  - Project Charter: charter.md
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/swapniljoijode/Retail-Fashion-Intelligence

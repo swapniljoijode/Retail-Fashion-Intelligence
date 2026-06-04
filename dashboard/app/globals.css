@@ -35,12 +35,26 @@ body {
   min-height: 0;
 }
 
-/* Recharts tooltip */
+/* Recharts tooltip — dark theme overrides */
 .recharts-tooltip-wrapper .recharts-default-tooltip {
   background: var(--surface-2) !important;
   border: 1px solid var(--border) !important;
   border-radius: 8px !important;
   font-size: 12px !important;
+}
+
+.recharts-tooltip-item {
+  color: #e2e8f0 !important;
+}
+
+.recharts-tooltip-item-name,
+.recharts-tooltip-item-value,
+.recharts-tooltip-item-separator {
+  color: #e2e8f0 !important;
+}
+
+.recharts-tooltip-label {
+  color: #e2e8f0 !important;
 }
 
 /* Scrollbar styling */

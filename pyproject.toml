@@ -28,12 +28,19 @@ dbt = [
     "dbt-core>=1.8.0,<2.0.0",
     "dbt-duckdb>=1.8.0,<2.0.0",
     "dbt-snowflake>=1.8.0,<2.0.0",
+    # Elementary CLI (edr) — run `edr report` after dbt build to generate
+    # the observability HTML report from the elementary schema.
+    "elementary-data>=0.15.0",
 ]
 dev = [
     "ruff>=0.4.0",
     "black>=24.0.0",
     "sqlfluff>=3.0.0",
     "pre-commit>=3.7.0",
+]
+docs = [
+    "mkdocs-material>=9.5.0",
+    "mkdocs-minify-plugin>=0.8.0",
 ]
 
 [build-system]

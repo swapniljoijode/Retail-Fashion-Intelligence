@@ -44,8 +44,9 @@ export default function FunnelBarChart({ data }: FunnelBarChartProps) {
         <YAxis tickFormatter={fmt} tick={{ fill: "#64748b", fontSize: 11 }} axisLine={false} tickLine={false} width={50} />
         <Tooltip
           formatter={(v: number) => [fmt(v), "Sessions"]}
-          contentStyle={{ background: "#161625", border: "1px solid #1e1e31", borderRadius: 8, fontSize: 12 }}
+          contentStyle={{ background: "#161625", border: "1px solid #1e1e31", borderRadius: 8, fontSize: 12, color: "#e2e8f0" }}
           labelStyle={{ color: "#e2e8f0" }}
+          itemStyle={{ color: "#e2e8f0" }}
         />
         <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={48}>
           {sorted.map((row, i) => (

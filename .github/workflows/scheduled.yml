@@ -137,10 +137,36 @@ jobs:
             --bucket    "$R2_SERVED_BUCKET" \
             --prefix    snapshot
 
-      # ── Step 6: Persist snapshot as a workflow artifact ────────────────────
+      # ── Step 6: Generate Elementary observability report ──────────────────
+      - name: Generate Elementary observability report
+        run: |
+          cat > elementary_profiles.yml << 'PROFILES'
+          fashion_retail:
+            target: duckdb
+            outputs:
+              duckdb:
+                type: duckdb
+                path: data/fashion_retail.duckdb
+                threads: 4
+          PROFILES
+          uv run edr report \
+            --profiles-yml elementary_profiles.yml \
+            --profile-target duckdb \
+            --project-dir dbt \
+            --file-path data/elementary_report.html || true
+
+      # ── Step 7: Persist snapshot and observability report as artifacts ─────
       - name: Upload snapshot as artifact
         uses: actions/upload-artifact@v4
         with:
           name: gold-snapshot-${{ github.run_id }}
           path: data/served/
+          retention-days: 30
+
+      - name: Upload Elementary report as artifact
+        if: hashFiles('data/elementary_report.html') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: elementary-report-${{ github.run_id }}
+          path: data/elementary_report.html
           retention-days: 30

@@ -41,8 +41,9 @@ export default function RevenueLineChart({ data }: RevenueLineChartProps) {
         <YAxis tickFormatter={fmt} tick={{ fill: "#64748b", fontSize: 11 }} axisLine={false} tickLine={false} width={60} />
         <Tooltip
           formatter={(v: number, name: string) => [fmt(v), name === "gross_revenue" ? "Gross Revenue" : "Net Revenue"]}
-          contentStyle={{ background: "#161625", border: "1px solid #1e1e31", borderRadius: 8, fontSize: 12 }}
+          contentStyle={{ background: "#161625", border: "1px solid #1e1e31", borderRadius: 8, fontSize: 12, color: "#e2e8f0" }}
           labelStyle={{ color: "#e2e8f0" }}
+          itemStyle={{ color: "#e2e8f0" }}
         />
         <Area type="monotone" dataKey="gross_revenue" stroke="#dfa832" strokeWidth={2} fill="url(#grad-gross)" name="gross_revenue" />
         <Area type="monotone" dataKey="net_revenue"   stroke="#8b5cf6" strokeWidth={2} fill="url(#grad-net)"   name="net_revenue" />

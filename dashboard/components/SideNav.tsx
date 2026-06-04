@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import DownloadDataButton from "@/components/DownloadDataButton";
 
 const NAV_ITEMS = [
   { href: "/sales",     label: "Sales",            icon: "💷" },
@@ -52,6 +53,11 @@ export default function SideNav() {
             </Link>
           );
         })}
+      </div>
+
+      {/* Download */}
+      <div className="px-3 pb-3 border-t pt-3" style={{ borderColor: "var(--border)" }}>
+        <DownloadDataButton />
       </div>
 
       {/* Footer */}
