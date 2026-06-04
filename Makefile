@@ -2,6 +2,7 @@
         dbt-deps dbt-run dbt-run-snowflake dbt-test dbt-docs dbt-build dbt-clean \
         airflow-init airflow-up airflow-down airflow-logs airflow-trigger airflow-backfill \
         docker-build docker-test docker-test-all docker-pipeline \
+        export-snapshot dashboard-install dashboard-dev dashboard-build \
         test test-all test-ci lint lint-fix pipeline ci up down clean help
 
 # ── Environment ───────────────────────────────────────────────────────────────
@@ -77,6 +78,21 @@ docker-test-all:  ## Run all tests (incl. smoke) inside the app container
 docker-pipeline:  ## Run the full pipeline (seed → bronze → dbt) inside the container
 	docker compose -f docker/docker-compose.yml run --rm app \
 		bash -c "make seed && make bronze-reset && make dbt-build"
+
+# ── Dashboard (Phase 8) ───────────────────────────────────────────────────────
+export-snapshot:  ## Export DuckDB gold marts to dashboard/public/data/*.json
+	uv run python -m ingestion.export_snapshot \
+		--db-path    data/fashion_retail.duckdb \
+		--output-dir dashboard/public/data
+
+dashboard-install:  ## Install Next.js dashboard dependencies (requires Node.js)
+	cd dashboard && npm install
+
+dashboard-dev:  ## Run Next.js dashboard in dev mode (requires npm install first)
+	cd dashboard && npm run dev
+
+dashboard-build:  ## Build the Next.js dashboard for production
+	cd dashboard && npm run build
 
 # ── Linting ───────────────────────────────────────────────────────────────────
 lint:
@@ -175,6 +191,10 @@ help:
 	@echo "  make lint-fix       Auto-fix code style issues"
 	@echo "  make pipeline       Full local pipeline: seed → bronze → dbt build"
 	@echo "  make ci             Replicate CI locally (lint + all tests + dbt)"
+	@echo "  make export-snapshot Export DuckDB gold marts to dashboard JSON"
+	@echo "  make dashboard-install Install Next.js deps (needs Node.js)"
+	@echo "  make dashboard-dev  Start Next.js dev server"
+	@echo "  make dashboard-build Build Next.js for production"
 	@echo "  make up             Start Docker Compose stack"
 	@echo "  make down           Stop Docker Compose stack"
 	@echo "  make clean          Remove generated artifacts and caches"
