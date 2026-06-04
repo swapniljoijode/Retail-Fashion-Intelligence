@@ -41,6 +41,6 @@ vars:
   # Maximum number of SCD versions expected per product / customer.
   # Used in dbt-expectations distribution tests.
   max_scd_versions: 3
-  # Elementary — days of history to keep in the monitoring tables.
-  elementary:
-    days_back: 14
+  # Note: do NOT add an 'elementary' var here — it shadows the Elementary
+  # package namespace in Jinja and breaks the upload_dbt_artifacts_v2() hook.
+  # Elementary's default days_back of 14 is sufficient.
