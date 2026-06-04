@@ -40,6 +40,13 @@ dbt-run:  ## Run dbt models against DuckDB
 dbt-run-snowflake:  ## Run dbt models against Snowflake trial
 	cd dbt && uv run dbt run --target snowflake --profiles-dir .
 
+dbt-build-snowflake:  ## dbt deps + run + test against Snowflake trial (full build)
+	cd dbt && uv run dbt deps --profiles-dir . && uv run dbt build --target snowflake --profiles-dir .
+
+dbt-docs-snowflake:  ## Generate dbt docs from Snowflake catalog and serve on :8080
+	cd dbt && uv run dbt docs generate --target snowflake --profiles-dir .
+	cd dbt && uv run dbt docs serve --port 8080
+
 dbt-test:  ## Run dbt tests against DuckDB
 	cd dbt && uv run dbt test --target duckdb --profiles-dir .
 

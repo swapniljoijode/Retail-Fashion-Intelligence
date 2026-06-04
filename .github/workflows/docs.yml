@@ -1,11 +1,20 @@
 name: Deploy Docs
 
+# Triggers on any push to main that touches docs, mkdocs config, or dbt models.
+# Also available for manual dispatch from the Actions tab.
+# Deploys two sites to the same gh-pages branch:
+#   /             — MkDocs (architecture, theory, metric dictionary, etc.)
+#   /dbt-docs/    — dbt docs (lineage graph, column descriptions, tests)
+
 on:
   push:
     branches: [main]
     paths:
       - "docs/**"
       - "mkdocs.yml"
+      - "dbt/models/**"
+      - "dbt/dbt_project.yml"
+      - "dbt/packages.yml"
   workflow_dispatch:
 
 permissions:
@@ -13,7 +22,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Build and deploy MkDocs to GitHub Pages
+    name: "MkDocs + dbt docs → GitHub Pages"
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +35,100 @@ jobs:
           python-version: "3.11"
           cache: pip
 
-      - name: Install docs dependencies
-        run: pip install "mkdocs-material>=9.5.0" "mkdocs-minify-plugin>=0.8.0"
+      - uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.4.29"
+          enable-cache: true
 
-      - name: Deploy to GitHub Pages
-        run: mkdocs gh-deploy --force --clean
+      - name: Install all Python deps (including dbt and docs extras)
+        run: uv sync --all-extras
+
+      # ── Generate test-volume data so dbt has something to build against ────────
+      - name: Generate test-volume synthetic data
+        run: |
+          mkdir -p data
+          uv run python -m data_generation.main \
+            --volume test \
+            --output-dir data_generation/output
+
+      - name: Load bronze layer (DuckDB)
+        run: |
+          uv run python -m ingestion.bronze_load \
+            --source-dir data_generation/output \
+            --db-path    data/fashion_retail.duckdb \
+            --reset
+
+      - name: Create dbt profiles.yml (DuckDB)
+        run: |
+          cat > dbt/profiles.yml << 'PROFILES'
+          fashion_retail:
+            target: duckdb
+            outputs:
+              duckdb:
+                type: duckdb
+                path: "../data/fashion_retail.duckdb"
+                threads: 4
+          PROFILES
+
+      - name: Cache dbt packages
+        uses: actions/cache@v4
+        with:
+          path: dbt/dbt_packages
+          key: dbt-packages-${{ hashFiles('dbt/packages.yml') }}
+          restore-keys: dbt-packages-
+
+      - name: dbt deps
+        run: cd dbt && uv run dbt deps --profiles-dir . --no-partial-parse
+
+      - name: dbt build (run + test) — populates DuckDB gold layer
+        run: |
+          cd dbt && uv run dbt build \
+            --target duckdb \
+            --profiles-dir . \
+            --no-partial-parse
+
+      # ── Generate dbt docs catalog and manifest ─────────────────────────────────
+      - name: dbt docs generate
+        run: |
+          cd dbt && uv run dbt docs generate \
+            --target duckdb \
+            --profiles-dir . \
+            --no-partial-parse
+
+      # ── Build MkDocs site ──────────────────────────────────────────────────────
+      - name: Build MkDocs site
+        run: uv run mkdocs build --clean
+
+      # ── Inject dbt docs into site/dbt-docs/ ───────────────────────────────────
+      - name: Inject dbt docs into MkDocs site
+        run: |
+          mkdir -p site/dbt-docs
+          cp dbt/target/index.html      site/dbt-docs/
+          cp dbt/target/catalog.json    site/dbt-docs/
+          cp dbt/target/manifest.json   site/dbt-docs/
+          cp dbt/target/run_results.json site/dbt-docs/
+
+      # ── Deploy combined site to gh-pages branch ────────────────────────────────
+      - name: Configure git for deployment
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy MkDocs site to gh-pages
+        run: uv run mkdocs gh-deploy --force --clean --no-history
+
+      # mkdocs gh-deploy pushes the built site to gh-pages (root).
+      # Now switch to gh-pages and append the dbt-docs subdirectory.
+      - name: Add dbt docs to gh-pages branch
+        run: |
+          git fetch origin gh-pages
+          git checkout gh-pages
+          mkdir -p dbt-docs
+          cp site/dbt-docs/index.html       dbt-docs/
+          cp site/dbt-docs/catalog.json     dbt-docs/
+          cp site/dbt-docs/manifest.json    dbt-docs/
+          cp site/dbt-docs/run_results.json dbt-docs/
+          git add dbt-docs/
+          git diff --staged --quiet || \
+            git commit -m "chore: update dbt lineage docs [skip ci]"
+          git push origin gh-pages

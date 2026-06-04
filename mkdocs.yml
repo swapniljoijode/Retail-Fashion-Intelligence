@@ -40,6 +40,7 @@ nav:
       - Dimensional Model: dimensional_model.md
   - Theory Companion: theory_companion.md
   - Operations:
+      - Snowflake Build: snowflake_setup.md
       - CI/CD Setup: ci_cd_setup.md
       - Backfill Procedure: backfill_procedure.md
       - Observability: observability.md

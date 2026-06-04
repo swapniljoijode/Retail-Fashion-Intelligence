@@ -37,6 +37,14 @@ The dashboard reads a static snapshot exported from gold marts — it never depe
 | **Product Planning** | What to replenish now, what to hold, where is stockout risk highest? |
 | **Placement** | Which regions are under-stocked relative to their revenue contribution? |
 
+## Documentation
+
+| Site | URL |
+|---|---|
+| **This site** (MkDocs) | `https://swapniljoijode.github.io/Retail-Fashion-Intelligence/` |
+| **dbt lineage graph** | `https://swapniljoijode.github.io/Retail-Fashion-Intelligence/dbt-docs/` |
+| **Live dashboard** | Vercel — see repo README for link |
+
 ## Quick start
 
 ```bash
