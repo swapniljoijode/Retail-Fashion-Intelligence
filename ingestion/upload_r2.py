@@ -11,6 +11,7 @@ CLI:
     python -m ingestion.upload_r2 --input-dir data_generation/output --prefix raw
     python -m ingestion.upload_r2 --dry-run
 """
+
 from __future__ import annotations
 
 import argparse
@@ -58,7 +59,11 @@ def upload_parquet(
     for local_path in parquet_files:
         relative = local_path.relative_to(input_dir)
         # Always use forward slashes for S3 keys
-        s3_key = "/".join([prefix] + list(relative.parts)) if prefix else "/".join(relative.parts)
+        s3_key = (
+            "/".join([prefix] + list(relative.parts))
+            if prefix
+            else "/".join(relative.parts)
+        )
         size_bytes = local_path.stat().st_size
 
         if not dry_run:

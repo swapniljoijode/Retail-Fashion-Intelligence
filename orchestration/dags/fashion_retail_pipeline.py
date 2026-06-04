@@ -24,6 +24,7 @@ Design principles
 
 Schedule: weekly (@weekly) — adjust via AIRFLOW_VAR_PIPELINE_SCHEDULE if needed.
 """
+
 from __future__ import annotations
 
 import logging
@@ -34,7 +35,13 @@ from pathlib import Path
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator, ShortCircuitOperator
-from cosmos import DbtTaskGroup, ExecutionConfig, ProfileConfig, ProjectConfig, RenderConfig
+from cosmos import (
+    DbtTaskGroup,
+    ExecutionConfig,
+    ProfileConfig,
+    ProjectConfig,
+    RenderConfig,
+)
 from cosmos.config import LoadMode
 
 log = logging.getLogger(__name__)
@@ -90,14 +97,19 @@ _render_config = RenderConfig(
 
 def _generate_data(**_context) -> None:
     """Generate small-volume synthetic data to _GENERATED."""
-    import subprocess, sys
+    import subprocess
+    import sys
 
     _GENERATED.mkdir(parents=True, exist_ok=True)
     result = subprocess.run(
         [
-            sys.executable, "-m", "data_generation.main",
-            "--volume", "small",
-            "--output-dir", str(_GENERATED),
+            sys.executable,
+            "-m",
+            "data_generation.main",
+            "--volume",
+            "small",
+            "--output-dir",
+            str(_GENERATED),
         ],
         cwd=str(_ROOT),
         capture_output=True,
@@ -133,10 +145,17 @@ def _export_snapshot(**_context) -> None:
     _SERVED.mkdir(parents=True, exist_ok=True)
 
     marts = [
-        "dim_date", "dim_product", "dim_store", "dim_customer",
-        "dim_channel", "dim_promotion",
-        "fct_sales", "fct_inventory_snapshot", "fct_returns",
-        "fct_web_events", "fct_markdown",
+        "dim_date",
+        "dim_product",
+        "dim_store",
+        "dim_customer",
+        "dim_channel",
+        "dim_promotion",
+        "fct_sales",
+        "fct_inventory_snapshot",
+        "fct_returns",
+        "fct_web_events",
+        "fct_markdown",
     ]
 
     conn = duckdb.connect(str(_DB), read_only=True)

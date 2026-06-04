@@ -1,4 +1,5 @@
 """Tests for fact generators — schema, value ranges, and business rules."""
+
 from __future__ import annotations
 
 import pandas as pd
@@ -11,10 +12,23 @@ class TestFactSales:
 
     def test_required_columns(self, fact_sales):
         required = {
-            "sale_key", "order_id", "order_line_id", "sale_date",
-            "product_id", "store_id", "customer_id", "channel_id", "promotion_id",
-            "units_sold", "unit_retail_price", "gross_revenue", "discount_amount",
-            "net_revenue", "unit_cost", "cogs", "gross_margin",
+            "sale_key",
+            "order_id",
+            "order_line_id",
+            "sale_date",
+            "product_id",
+            "store_id",
+            "customer_id",
+            "channel_id",
+            "promotion_id",
+            "units_sold",
+            "unit_retail_price",
+            "gross_revenue",
+            "discount_amount",
+            "net_revenue",
+            "unit_cost",
+            "cogs",
+            "gross_margin",
         }
         assert required.issubset(set(fact_sales.columns))
 
@@ -51,8 +65,13 @@ class TestFactInventory:
 
     def test_required_columns(self, fact_inventory):
         required = {
-            "inventory_key", "snapshot_date", "product_id", "store_id",
-            "units_on_hand", "units_in_transit", "is_stockout",
+            "inventory_key",
+            "snapshot_date",
+            "product_id",
+            "store_id",
+            "units_on_hand",
+            "units_in_transit",
+            "is_stockout",
         }
         assert required.issubset(set(fact_inventory.columns))
 
@@ -70,10 +89,18 @@ class TestFactInventory:
 class TestFactReturns:
     def test_required_columns(self, fact_returns):
         required = {
-            "return_key", "return_id", "original_order_id",
-            "return_date", "original_sale_date",
-            "product_id", "store_id", "customer_id", "channel_id",
-            "units_returned", "refund_value", "return_reason",
+            "return_key",
+            "return_id",
+            "original_order_id",
+            "return_date",
+            "original_sale_date",
+            "product_id",
+            "store_id",
+            "customer_id",
+            "channel_id",
+            "units_returned",
+            "refund_value",
+            "return_reason",
         }
         assert required.issubset(set(fact_returns.columns))
 
@@ -92,7 +119,14 @@ class TestFactReturns:
     def test_return_reason_valid(self, fact_returns):
         if len(fact_returns) == 0:
             pytest.skip("No returns generated")
-        valid = {"size", "quality", "changed_mind", "damaged", "wrong_item", "late_delivery"}
+        valid = {
+            "size",
+            "quality",
+            "changed_mind",
+            "damaged",
+            "wrong_item",
+            "late_delivery",
+        }
         assert set(fact_returns["return_reason"].unique()).issubset(valid)
 
 
@@ -102,15 +136,23 @@ class TestFactWebEvents:
 
     def test_required_columns(self, fact_web_events):
         required = {
-            "event_key", "session_id", "event_date",
-            "channel_id", "device_type", "event_type",
+            "event_key",
+            "session_id",
+            "event_date",
+            "channel_id",
+            "device_type",
+            "event_type",
         }
         assert required.issubset(set(fact_web_events.columns))
 
     def test_event_types_valid(self, fact_web_events):
         valid = {
-            "page_view", "product_view", "add_to_cart",
-            "checkout_start", "purchase", "abandon_cart",
+            "page_view",
+            "product_view",
+            "add_to_cart",
+            "checkout_start",
+            "purchase",
+            "abandon_cart",
         }
         assert set(fact_web_events["event_type"].unique()).issubset(valid)
 
@@ -126,9 +168,15 @@ class TestFactWebEvents:
 class TestFactMarkdown:
     def test_required_columns(self, fact_markdown):
         required = {
-            "markdown_key", "week_start_date", "product_id", "store_id",
-            "regular_price", "markdown_price", "markdown_depth_pct",
-            "units_sold_on_markdown", "revenue_on_markdown",
+            "markdown_key",
+            "week_start_date",
+            "product_id",
+            "store_id",
+            "regular_price",
+            "markdown_price",
+            "markdown_depth_pct",
+            "units_sold_on_markdown",
+            "revenue_on_markdown",
         }
         assert required.issubset(set(fact_markdown.columns))
 

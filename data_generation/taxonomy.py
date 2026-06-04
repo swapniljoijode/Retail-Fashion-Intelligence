@@ -4,6 +4,7 @@ Hand-seeded fashion taxonomy.
 All constants here make synthetic records read like a real UK fashion retailer
 rather than random strings. Values are deliberately chosen, not generated.
 """
+
 from __future__ import annotations
 
 # ── Product taxonomy ──────────────────────────────────────────────────────────
@@ -26,7 +27,13 @@ CATEGORIES: dict[str, dict] = {
         "category_weight": 0.22,
     },
     "Dresses": {
-        "subcategories": ["Mini Dress", "Midi Dress", "Maxi Dress", "Shirt Dress", "Wrap Dress"],
+        "subcategories": [
+            "Mini Dress",
+            "Midi Dress",
+            "Maxi Dress",
+            "Shirt Dress",
+            "Wrap Dress",
+        ],
         "sizes": ["XS", "S", "M", "L", "XL"],
         "price_range": (35.0, 180.0),
         "margin_range": (0.58, 0.75),
@@ -73,9 +80,24 @@ BRANDS: list[str] = [
 ]
 
 COLORS: list[str] = [
-    "Black", "White", "Navy", "Grey", "Beige", "Camel", "Olive",
-    "Burgundy", "Blush", "Sage", "Cobalt", "Terracotta", "Cream",
-    "Charcoal", "Forest Green", "Rust", "Lilac", "Ecru",
+    "Black",
+    "White",
+    "Navy",
+    "Grey",
+    "Beige",
+    "Camel",
+    "Olive",
+    "Burgundy",
+    "Blush",
+    "Sage",
+    "Cobalt",
+    "Terracotta",
+    "Cream",
+    "Charcoal",
+    "Forest Green",
+    "Rust",
+    "Lilac",
+    "Ecru",
 ]
 
 BUYING_SEASONS: list[str] = ["SS24", "AW24", "SS25", "AW25"]
@@ -134,7 +156,13 @@ UK_CITIES_BY_REGION: dict[str, list[str]] = {
 
 # Weighted so most stores are standard; one flagship and a couple of outlets
 STORE_TYPE_POOL: list[str] = [
-    "flagship", "standard", "standard", "standard", "standard", "outlet", "pop_up",
+    "flagship",
+    "standard",
+    "standard",
+    "standard",
+    "standard",
+    "outlet",
+    "pop_up",
 ]
 
 STORE_SQFT_RANGES: dict[str, tuple[int, int]] = {
@@ -153,52 +181,97 @@ LOYALTY_TIERS: list[str] = ["bronze", "silver", "gold", "platinum"]
 LOYALTY_WEIGHTS: list[float] = [0.50, 0.30, 0.15, 0.05]
 
 ACQUISITION_CHANNELS: list[str] = [
-    "organic", "paid_search", "social", "email", "referral", "in_store"
+    "organic",
+    "paid_search",
+    "social",
+    "email",
+    "referral",
+    "in_store",
 ]
 ACQUISITION_WEIGHTS: list[float] = [0.25, 0.20, 0.25, 0.15, 0.10, 0.05]
 
 # ── Channel seed (7 rows — mirrors dim_channel in the data model) ─────────────
 
 CHANNEL_SEED: list[dict] = [
-    {"channel_id": "CH01", "channel_name": "Own Website",    "channel_type": "digital",     "platform": "own_website"},
-    {"channel_id": "CH02", "channel_name": "Instagram Shop", "channel_type": "digital",     "platform": "instagram_shop"},
-    {"channel_id": "CH03", "channel_name": "Amazon",         "channel_type": "marketplace", "platform": "amazon"},
-    {"channel_id": "CH04", "channel_name": "Flagship Store", "channel_type": "physical",    "platform": "own_store"},
-    {"channel_id": "CH05", "channel_name": "Standard Store", "channel_type": "physical",    "platform": "own_store"},
-    {"channel_id": "CH06", "channel_name": "Outlet Store",   "channel_type": "physical",    "platform": "outlet_store"},
-    {"channel_id": "CH07", "channel_name": "Pop-Up",         "channel_type": "physical",    "platform": "pop_up"},
+    {
+        "channel_id": "CH01",
+        "channel_name": "Own Website",
+        "channel_type": "digital",
+        "platform": "own_website",
+    },
+    {
+        "channel_id": "CH02",
+        "channel_name": "Instagram Shop",
+        "channel_type": "digital",
+        "platform": "instagram_shop",
+    },
+    {
+        "channel_id": "CH03",
+        "channel_name": "Amazon",
+        "channel_type": "marketplace",
+        "platform": "amazon",
+    },
+    {
+        "channel_id": "CH04",
+        "channel_name": "Flagship Store",
+        "channel_type": "physical",
+        "platform": "own_store",
+    },
+    {
+        "channel_id": "CH05",
+        "channel_name": "Standard Store",
+        "channel_type": "physical",
+        "platform": "own_store",
+    },
+    {
+        "channel_id": "CH06",
+        "channel_name": "Outlet Store",
+        "channel_type": "physical",
+        "platform": "outlet_store",
+    },
+    {
+        "channel_id": "CH07",
+        "channel_name": "Pop-Up",
+        "channel_type": "physical",
+        "platform": "pop_up",
+    },
 ]
 
 # ── Promotions ────────────────────────────────────────────────────────────────
 
 # (name, type, peak_month, discount_pct | None, duration_days)
 NAMED_PROMOTIONS: list[tuple] = [
-    ("Spring Sale",         "pct_off",       3,  0.20, 14),
-    ("Summer Sale",         "pct_off",       7,  0.30, 21),
-    ("End of Season AW",    "pct_off",       1,  0.40, 28),
-    ("End of Season SS",    "pct_off",       8,  0.35, 21),
-    ("Black Friday",        "pct_off",       11, 0.25, 4),
-    ("Cyber Monday",        "pct_off",       11, 0.20, 2),
-    ("Boxing Day",          "pct_off",       12, 0.30, 7),
-    ("New Year Sale",       "pct_off",       1,  0.25, 14),
-    ("Bank Holiday",        "pct_off",       5,  0.15, 3),
-    ("Student Discount",    "pct_off",       9,  0.10, 30),
-    ("Free Shipping Week",  "free_shipping", 4,  None, 7),
-    ("Buy 2 Get 1",         "buy_x_get_y",   6,  0.33, 10),
-    ("Bundle Deal",         "bundle",        10, 0.15, 14),
-    ("Loyalty Reward",      "pct_off",       12, 0.15, 30),
-    ("Flash Sale",          "pct_off",       2,  0.20, 2),
-    ("Referral Bonus",      "pct_off",       7,  0.10, 30),
-    ("Birthday Month",      "pct_off",       6,  0.15, 30),
-    ("VIP Preview",         "pct_off",       9,  0.20, 5),
-    ("Clearance",           "pct_off",       8,  0.50, 28),
-    ("Pay Day Deal",        "pct_off",       1,  0.20, 3),
+    ("Spring Sale", "pct_off", 3, 0.20, 14),
+    ("Summer Sale", "pct_off", 7, 0.30, 21),
+    ("End of Season AW", "pct_off", 1, 0.40, 28),
+    ("End of Season SS", "pct_off", 8, 0.35, 21),
+    ("Black Friday", "pct_off", 11, 0.25, 4),
+    ("Cyber Monday", "pct_off", 11, 0.20, 2),
+    ("Boxing Day", "pct_off", 12, 0.30, 7),
+    ("New Year Sale", "pct_off", 1, 0.25, 14),
+    ("Bank Holiday", "pct_off", 5, 0.15, 3),
+    ("Student Discount", "pct_off", 9, 0.10, 30),
+    ("Free Shipping Week", "free_shipping", 4, None, 7),
+    ("Buy 2 Get 1", "buy_x_get_y", 6, 0.33, 10),
+    ("Bundle Deal", "bundle", 10, 0.15, 14),
+    ("Loyalty Reward", "pct_off", 12, 0.15, 30),
+    ("Flash Sale", "pct_off", 2, 0.20, 2),
+    ("Referral Bonus", "pct_off", 7, 0.10, 30),
+    ("Birthday Month", "pct_off", 6, 0.15, 30),
+    ("VIP Preview", "pct_off", 9, 0.20, 5),
+    ("Clearance", "pct_off", 8, 0.50, 28),
+    ("Pay Day Deal", "pct_off", 1, 0.20, 3),
 ]
 
 # ── Returns ───────────────────────────────────────────────────────────────────
 
 RETURN_REASONS: list[str] = [
-    "size", "quality", "changed_mind", "damaged", "wrong_item", "late_delivery"
+    "size",
+    "quality",
+    "changed_mind",
+    "damaged",
+    "wrong_item",
+    "late_delivery",
 ]
 RETURN_REASON_WEIGHTS: list[float] = [0.35, 0.20, 0.25, 0.10, 0.05, 0.05]
 
@@ -224,5 +297,5 @@ FUNNEL_REACH: dict[str, float] = {
     "add_to_cart": 0.28,
     "checkout_start": 0.12,
     "purchase": 0.05,
-    "abandon_cart": 0.00,   # derived: add_to_cart but no purchase
+    "abandon_cart": 0.00,  # derived: add_to_cart but no purchase
 }

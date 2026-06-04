@@ -16,11 +16,11 @@ Run only the smoke test:
 Run everything including smoke:
     uv run pytest tests/ -v -m ''
 """
+
 from __future__ import annotations
 
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import duckdb
@@ -53,12 +53,19 @@ _DBT_DIR = Path(__file__).parent.parent / "dbt"
 _DBT_PACKAGES = _DBT_DIR / "dbt_packages"
 
 _GOLD_DIMS = [
-    "dim_date", "dim_product", "dim_store",
-    "dim_customer", "dim_channel", "dim_promotion",
+    "dim_date",
+    "dim_product",
+    "dim_store",
+    "dim_customer",
+    "dim_channel",
+    "dim_promotion",
 ]
 _GOLD_FACTS = [
-    "fct_sales", "fct_inventory_snapshot", "fct_returns",
-    "fct_web_events", "fct_markdown",
+    "fct_sales",
+    "fct_inventory_snapshot",
+    "fct_returns",
+    "fct_web_events",
+    "fct_markdown",
 ]
 _ALL_MARTS = _GOLD_DIMS + _GOLD_FACTS
 
@@ -94,27 +101,29 @@ def pipeline(tmp_path_factory):
     # ── 1. Generate TEST volume Parquet ──────────────────────────────────────
     rng = np.random.default_rng(TEST.seed)
     dims = {
-        "dim_date":      generate_dim_date(TEST),
-        "dim_product":   generate_dim_product(TEST, rng),
-        "dim_store":     generate_dim_store(TEST, rng),
-        "dim_customer":  generate_dim_customer(TEST, rng),
-        "dim_channel":   generate_dim_channel(),
+        "dim_date": generate_dim_date(TEST),
+        "dim_product": generate_dim_product(TEST, rng),
+        "dim_store": generate_dim_store(TEST, rng),
+        "dim_customer": generate_dim_customer(TEST, rng),
+        "dim_channel": generate_dim_channel(),
         "dim_promotion": generate_dim_promotion(TEST, rng),
     }
     fact_sales = generate_fact_sales(TEST, rng, dims)
     all_tables = {
         **dims,
-        "fact_sales":              fact_sales,
-        "fact_inventory_snapshot": generate_fact_inventory_snapshot(TEST, rng, dims, fact_sales),
-        "fact_returns":            generate_fact_returns(TEST, rng, dims, fact_sales),
-        "fact_web_events":         generate_fact_web_events(TEST, rng, dims),
-        "fact_markdown":           generate_fact_markdown(TEST, rng, dims, fact_sales),
+        "fact_sales": fact_sales,
+        "fact_inventory_snapshot": generate_fact_inventory_snapshot(
+            TEST, rng, dims, fact_sales
+        ),
+        "fact_returns": generate_fact_returns(TEST, rng, dims, fact_sales),
+        "fact_web_events": generate_fact_web_events(TEST, rng, dims),
+        "fact_markdown": generate_fact_markdown(TEST, rng, dims, fact_sales),
     }
     dirty = apply_dirtiness(all_tables, rng)
 
     parquet_dir = tmp_path_factory.mktemp("smoke_parquet")
-    db_dir      = tmp_path_factory.mktemp("smoke_db")
-    db_path     = str(db_dir / "fashion_retail.duckdb")
+    db_dir = tmp_path_factory.mktemp("smoke_db")
+    db_path = str(db_dir / "fashion_retail.duckdb")
 
     write_all(dirty, parquet_dir)
 
@@ -136,28 +145,37 @@ def pipeline(tmp_path_factory):
     # ── 4. dbt deps (skip if dbt_packages already present from dev work) ──────
     if not _DBT_PACKAGES.exists():
         _run_dbt(
-            ["deps",
-             "--project-dir", str(_DBT_DIR),
-             "--profiles-dir", str(profiles_dir)],
+            [
+                "deps",
+                "--project-dir",
+                str(_DBT_DIR),
+                "--profiles-dir",
+                str(profiles_dir),
+            ],
             check=True,
         )
 
     # ── 5. dbt build — run + test all layers ─────────────────────────────────
-    dbt_result = _run_dbt([
-        "build",
-        "--project-dir",   str(_DBT_DIR),
-        "--profiles-dir",  str(profiles_dir),
-        "--target",        "duckdb",
-        "--no-partial-parse",
-    ])
+    dbt_result = _run_dbt(
+        [
+            "build",
+            "--project-dir",
+            str(_DBT_DIR),
+            "--profiles-dir",
+            str(profiles_dir),
+            "--target",
+            "duckdb",
+            "--no-partial-parse",
+        ]
+    )
 
     return {
-        "db_path":        db_path,
-        "log_rows":       log_rows,
+        "db_path": db_path,
+        "log_rows": log_rows,
         "dbt_returncode": dbt_result.returncode,
-        "dbt_stdout":     dbt_result.stdout,
-        "dbt_stderr":     dbt_result.stderr,
-        "source_tables":  dirty,
+        "dbt_stdout": dbt_result.stdout,
+        "dbt_stderr": dbt_result.stderr,
+        "source_tables": dirty,
     }
 
 
@@ -198,9 +216,9 @@ class TestSmokeDbtBuild:
 
     def test_dbt_reports_no_errors(self, pipeline):
         # dbt build summary line: "Done. PASS=N WARN=0 ERROR=0 SKIP=0"
-        assert "ERROR=0" in pipeline["dbt_stdout"], (
-            "dbt output shows errors. Check pipeline['dbt_stdout'] for details."
-        )
+        assert (
+            "ERROR=0" in pipeline["dbt_stdout"]
+        ), "dbt output shows errors. Check pipeline['dbt_stdout'] for details."
 
 
 class TestSmokeGoldLayer:
@@ -251,9 +269,9 @@ class TestSmokeGoldLayer:
             "SELECT COUNT(*) FROM marts.fct_sales WHERE customer_key = -1"
         ).fetchone()[0]
         conn.close()
-        assert unresolved == 0, (
-            f"{unresolved} fct_sales rows have unresolved customer_key (-1)."
-        )
+        assert (
+            unresolved == 0
+        ), f"{unresolved} fct_sales rows have unresolved customer_key (-1)."
 
     def test_dim_product_contracts_enforced(self, pipeline):
         """Contract enforcement: product_key must be unique (enforced in dim_product)."""
@@ -271,14 +289,14 @@ class TestSmokeGoldLayer:
         """Mart fact row counts must equal staging counts (no rows dropped by dbt)."""
         conn = duckdb.connect(pipeline["db_path"], read_only=True)
         pairs = [
-            ("staging.stg_bronze__fact_sales",    "marts.fct_sales"),
-            ("staging.stg_bronze__fact_returns",  "marts.fct_returns"),
+            ("staging.stg_bronze__fact_sales", "marts.fct_sales"),
+            ("staging.stg_bronze__fact_returns", "marts.fct_returns"),
             ("staging.stg_bronze__fact_markdown", "marts.fct_markdown"),
         ]
         for stg, mart in pairs:
-            stg_count  = conn.execute(f"SELECT COUNT(*) FROM {stg}").fetchone()[0]
+            stg_count = conn.execute(f"SELECT COUNT(*) FROM {stg}").fetchone()[0]
             mart_count = conn.execute(f"SELECT COUNT(*) FROM {mart}").fetchone()[0]
-            assert stg_count == mart_count, (
-                f"{mart}: expected {stg_count} rows (same as {stg}), got {mart_count}"
-            )
+            assert (
+                stg_count == mart_count
+            ), f"{mart}: expected {stg_count} rows (same as {stg}), got {mart_count}"
         conn.close()

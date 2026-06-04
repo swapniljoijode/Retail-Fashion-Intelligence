@@ -1,4 +1,5 @@
 """Generators for all five fact tables."""
+
 from __future__ import annotations
 
 from datetime import date, timedelta
@@ -14,11 +15,10 @@ from data_generation.taxonomy import (
     FUNNEL_REACH,
     MONTHLY_DEMAND,
     RETURN_RATES,
-    RETURN_REASONS,
     RETURN_REASON_WEIGHTS,
+    RETURN_REASONS,
     SEASON_MONTHS,
 )
-
 
 # ── fact_sales ────────────────────────────────────────────────────────────────
 
@@ -56,10 +56,16 @@ def generate_fact_sales(
 
     current_customers = dim_customer[dim_customer["is_current"]]["customer_id"].values
 
-    digital_ch = dim_channel[dim_channel["channel_type"].isin(["digital", "marketplace"])]["channel_id"].values
+    digital_ch = dim_channel[
+        dim_channel["channel_type"].isin(["digital", "marketplace"])
+    ]["channel_id"].values
     physical_ch_map = {
-        "flagship": dim_channel[dim_channel["channel_id"] == "CH04"]["channel_id"].values,
-        "standard": dim_channel[dim_channel["channel_id"] == "CH05"]["channel_id"].values,
+        "flagship": dim_channel[dim_channel["channel_id"] == "CH04"][
+            "channel_id"
+        ].values,
+        "standard": dim_channel[dim_channel["channel_id"] == "CH05"][
+            "channel_id"
+        ].values,
         "outlet": dim_channel[dim_channel["channel_id"] == "CH06"]["channel_id"].values,
         "pop_up": dim_channel[dim_channel["channel_id"] == "CH07"]["channel_id"].values,
     }
@@ -70,16 +76,20 @@ def generate_fact_sales(
 
     # Pre-compute per-month product selection weights (avoids recomputing per order)
     monthly_weights: dict[int, np.ndarray] = {}
-    base_w = np.array([CATEGORIES[prod_lookup[p]["category"]]["category_weight"] for p in product_ids])
+    base_w = np.array(
+        [CATEGORIES[prod_lookup[p]["category"]]["category_weight"] for p in product_ids]
+    )
     for month in range(1, 13):
         w = base_w.copy()
         for i, pid in enumerate(product_ids):
             st = prod_lookup[pid]["season"][:2]  # "SS" or "AW"
             affinity = CATEGORIES[prod_lookup[pid]["category"]]["season_affinity"]
-            if (st == "SS" and month in SEASON_MONTHS["SS"]) or (st == "AW" and month in SEASON_MONTHS["AW"]):
+            if (st == "SS" and month in SEASON_MONTHS["SS"]) or (
+                st == "AW" and month in SEASON_MONTHS["AW"]
+            ):
                 w[i] *= affinity[st]
             else:
-                w[i] *= (1 / affinity[st])
+                w[i] *= 1 / affinity[st]
         w = w / w.sum()
         monthly_weights[month] = w
 
@@ -106,7 +116,9 @@ def generate_fact_sales(
         promos_today = date_to_promos[dt]
         promo_mult = 1.0 + 0.15 * len(promos_today)
 
-        n_orders = int(rng.poisson(config.avg_daily_orders * seasonal_mult * day_mult * promo_mult))
+        n_orders = int(
+            rng.poisson(config.avg_daily_orders * seasonal_mult * day_mult * promo_mult)
+        )
 
         pw = monthly_weights[month]
 
@@ -148,25 +160,27 @@ def generate_fact_sales(
                 cogs = round(units * cost, 2)
                 margin = round(net - cogs, 2)
 
-                rows.append({
-                    "sale_key": sale_key,
-                    "order_id": order_id,
-                    "order_line_id": f"ORL-{sale_key:09d}",
-                    "sale_date": dt,
-                    "product_id": pid,
-                    "store_id": store_id,
-                    "customer_id": customer_id,
-                    "channel_id": channel_id,
-                    "promotion_id": promo_id,
-                    "units_sold": units,
-                    "unit_retail_price": retail,
-                    "gross_revenue": gross,
-                    "discount_amount": disc,
-                    "net_revenue": net,
-                    "unit_cost": cost,
-                    "cogs": cogs,
-                    "gross_margin": margin,
-                })
+                rows.append(
+                    {
+                        "sale_key": sale_key,
+                        "order_id": order_id,
+                        "order_line_id": f"ORL-{sale_key:09d}",
+                        "sale_date": dt,
+                        "product_id": pid,
+                        "store_id": store_id,
+                        "customer_id": customer_id,
+                        "channel_id": channel_id,
+                        "promotion_id": promo_id,
+                        "units_sold": units,
+                        "unit_retail_price": retail,
+                        "gross_revenue": gross,
+                        "discount_amount": disc,
+                        "net_revenue": net,
+                        "unit_cost": cost,
+                        "cogs": cogs,
+                        "gross_margin": margin,
+                    }
+                )
                 sale_key += 1
 
     return pd.DataFrame(rows)
@@ -224,22 +238,31 @@ def generate_fact_inventory_snapshot(
                 # Replenish: place an order every cycle; goods arrive 3 days later
                 if day_idx % replenishment_cycle == (replenishment_cycle - 1):
                     transit += replenishment_qty
-                if day_idx % replenishment_cycle == (replenishment_cycle - 1 + 3) % replenishment_cycle:
+                if (
+                    day_idx % replenishment_cycle
+                    == (replenishment_cycle - 1 + 3) % replenishment_cycle
+                ):
                     arriving = min(transit, replenishment_qty)
                     stock += arriving
                     transit = max(0, transit - arriving)
 
-                rows.append({
-                    "inventory_key": inv_key,
-                    "snapshot_date": dt,
-                    "product_id": pid,
-                    "store_id": sid,
-                    "units_on_hand": stock,
-                    "units_in_transit": transit,
-                    "units_on_order": replenishment_qty if day_idx % replenishment_cycle == 0 else 0,
-                    "reorder_point": reorder_point,
-                    "is_stockout": stock == 0,
-                })
+                rows.append(
+                    {
+                        "inventory_key": inv_key,
+                        "snapshot_date": dt,
+                        "product_id": pid,
+                        "store_id": sid,
+                        "units_on_hand": stock,
+                        "units_in_transit": transit,
+                        "units_on_order": (
+                            replenishment_qty
+                            if day_idx % replenishment_cycle == 0
+                            else 0
+                        ),
+                        "reorder_point": reorder_point,
+                        "is_stockout": stock == 0,
+                    }
+                )
                 inv_key += 1
 
     return pd.DataFrame(rows)
@@ -282,23 +305,30 @@ def generate_fact_returns(
         if return_date > config.end_date:
             return_date = config.end_date
 
-        refund = round(units_returned * sale["unit_retail_price"] * float(rng.uniform(0.90, 1.00)), 2)
+        refund = round(
+            units_returned * sale["unit_retail_price"] * float(rng.uniform(0.90, 1.00)),
+            2,
+        )
 
-        rows.append({
-            "return_key": return_key,
-            "return_id": f"RET-{return_counter:07d}",
-            "return_line_id": f"RTL-{return_key:09d}",
-            "original_order_id": sale["order_id"],
-            "return_date": return_date,
-            "original_sale_date": sale["sale_date"],
-            "product_id": pid,
-            "store_id": sale["store_id"],
-            "customer_id": sale["customer_id"],
-            "channel_id": str(rng.choice(channel_ids)),
-            "units_returned": units_returned,
-            "refund_value": refund,
-            "return_reason": str(rng.choice(RETURN_REASONS, p=RETURN_REASON_WEIGHTS)),
-        })
+        rows.append(
+            {
+                "return_key": return_key,
+                "return_id": f"RET-{return_counter:07d}",
+                "return_line_id": f"RTL-{return_key:09d}",
+                "original_order_id": sale["order_id"],
+                "return_date": return_date,
+                "original_sale_date": sale["sale_date"],
+                "product_id": pid,
+                "store_id": sale["store_id"],
+                "customer_id": sale["customer_id"],
+                "channel_id": str(rng.choice(channel_ids)),
+                "units_returned": units_returned,
+                "refund_value": refund,
+                "return_reason": str(
+                    rng.choice(RETURN_REASONS, p=RETURN_REASON_WEIGHTS)
+                ),
+            }
+        )
         return_key += 1
         return_counter += 1
 
@@ -325,8 +355,12 @@ def generate_fact_web_events(
         dims["dim_channel"]["channel_type"].isin(["digital", "marketplace"])
     ]["channel_id"].values
 
-    current_products = dims["dim_product"][dims["dim_product"]["is_current"]]["product_id"].values
-    current_customers = dims["dim_customer"][dims["dim_customer"]["is_current"]]["customer_id"].values
+    current_products = dims["dim_product"][dims["dim_product"]["is_current"]][
+        "product_id"
+    ].values
+    current_customers = dims["dim_customer"][dims["dim_customer"]["is_current"]][
+        "customer_id"
+    ].values
 
     # 5 % conversion rate implies ~20 sessions per online order
     sessions_per_order = 20
@@ -353,7 +387,9 @@ def generate_fact_web_events(
             duration = int(rng.integers(10, 900))
 
             # Anonymous 30 % of the time
-            customer_id = str(rng.choice(current_customers)) if rng.random() > 0.30 else None
+            customer_id = (
+                str(rng.choice(current_customers)) if rng.random() > 0.30 else None
+            )
 
             # Funnel: each stage probabilistically reached
             reached_product_view = rng.random() < FUNNEL_REACH["product_view"]
@@ -376,7 +412,9 @@ def generate_fact_web_events(
                 "device_type": device,
                 "session_duration_seconds": duration,
             }
-            product_id = str(rng.choice(current_products)) if reached_product_view else None
+            product_id = (
+                str(rng.choice(current_products)) if reached_product_view else None
+            )
 
             # Emit one row per event type reached in this session
             event_types = ["page_view"]
@@ -392,12 +430,14 @@ def generate_fact_web_events(
                 event_types.append("abandon_cart")
 
             for evt in event_types:
-                rows.append({
-                    "event_key": event_key,
-                    **base,
-                    "product_id": product_id if evt not in ("page_view",) else None,
-                    "event_type": evt,
-                })
+                rows.append(
+                    {
+                        "event_key": event_key,
+                        **base,
+                        "product_id": product_id if evt not in ("page_view",) else None,
+                        "event_type": evt,
+                    }
+                )
                 event_key += 1
 
     return pd.DataFrame(rows)
@@ -422,13 +462,13 @@ def generate_fact_markdown(
     current_products = dims["dim_product"][dims["dim_product"]["is_current"]].copy()
     prod_price = current_products.set_index("product_id")["retail_price"].to_dict()
     prod_season = current_products.set_index("product_id")["season"].to_dict()
-    store_ids = dims["dim_store"]["store_id"].values
-    product_ids = current_products["product_id"].values
 
     # Build weekly sales aggregates to know which products sold each week
     sales_copy = fact_sales.copy()
     sales_copy["sale_date"] = pd.to_datetime(sales_copy["sale_date"])
-    sales_copy["week_start"] = sales_copy["sale_date"].dt.to_period("W").apply(lambda p: p.start_time.date())
+    sales_copy["week_start"] = (
+        sales_copy["sale_date"].dt.to_period("W").apply(lambda p: p.start_time.date())
+    )
     weekly_sales = (
         sales_copy.groupby(["product_id", "store_id", "week_start"])["units_sold"]
         .sum()
@@ -447,11 +487,8 @@ def generate_fact_markdown(
         if month not in clearance_months:
             continue
 
-        # Season-relevant products for this clearance period
-        if month == 7:
-            target_season_prefix = "SS"  # clearing SS stock in July
-        else:
-            target_season_prefix = "AW"  # clearing AW stock in Jan/Aug
+        # SS products clear in July; AW products clear in Jan/Aug
+        target_season_prefix = "SS" if month == 7 else "AW"
 
         week_sales = weekly_sales[weekly_sales["week_start"] == week]
 
@@ -473,17 +510,19 @@ def generate_fact_markdown(
             units_on_markdown = int(row["units_sold"])
             revenue_on_markdown = round(units_on_markdown * markdown_price, 2)
 
-            rows.append({
-                "markdown_key": markdown_key,
-                "week_start_date": week,
-                "product_id": pid,
-                "store_id": sid,
-                "regular_price": regular_price,
-                "markdown_price": markdown_price,
-                "markdown_depth_pct": depth,
-                "units_sold_on_markdown": units_on_markdown,
-                "revenue_on_markdown": revenue_on_markdown,
-            })
+            rows.append(
+                {
+                    "markdown_key": markdown_key,
+                    "week_start_date": week,
+                    "product_id": pid,
+                    "store_id": sid,
+                    "regular_price": regular_price,
+                    "markdown_price": markdown_price,
+                    "markdown_depth_pct": depth,
+                    "units_sold_on_markdown": units_on_markdown,
+                    "revenue_on_markdown": revenue_on_markdown,
+                }
+            )
             markdown_key += 1
 
     return pd.DataFrame(rows)

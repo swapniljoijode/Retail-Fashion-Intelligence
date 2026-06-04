@@ -3,6 +3,7 @@
 The TEST volume (5 styles, 3 stores, 50 customers, 31 days) runs in < 5 s,
 keeping the suite fast while exercising all code paths.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -39,11 +40,11 @@ def rng():
 @pytest.fixture(scope="session")
 def dims(config, rng):
     return {
-        "dim_date":      generate_dim_date(config),
-        "dim_product":   generate_dim_product(config, rng),
-        "dim_store":     generate_dim_store(config, rng),
-        "dim_customer":  generate_dim_customer(config, rng),
-        "dim_channel":   generate_dim_channel(),
+        "dim_date": generate_dim_date(config),
+        "dim_product": generate_dim_product(config, rng),
+        "dim_store": generate_dim_store(config, rng),
+        "dim_customer": generate_dim_customer(config, rng),
+        "dim_channel": generate_dim_channel(),
         "dim_promotion": generate_dim_promotion(config, rng),
     }
 

@@ -1,4 +1,5 @@
 """Write generated DataFrames to date-partitioned Parquet files."""
+
 from __future__ import annotations
 
 import logging
@@ -70,7 +71,11 @@ def _write_fact(df: pd.DataFrame, name: str, output_dir: Path, date_col: str) ->
     for (year, month), chunk in df.groupby(["_year", "_month"]):
         part = chunk.drop(columns=["_dt", "_year", "_month"])
         out_path = (
-            output_dir / name / f"year={year}" / f"month={month:02d}" / f"{name}.parquet"
+            output_dir
+            / name
+            / f"year={year}"
+            / f"month={month:02d}"
+            / f"{name}.parquet"
         )
         out_path.parent.mkdir(parents=True, exist_ok=True)
         table = pa.Table.from_pandas(part, preserve_index=False)

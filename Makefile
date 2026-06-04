@@ -2,7 +2,7 @@
         dbt-deps dbt-run dbt-run-snowflake dbt-test dbt-docs dbt-build dbt-clean \
         airflow-init airflow-up airflow-down airflow-logs airflow-trigger airflow-backfill \
         docker-build docker-test docker-test-all docker-pipeline \
-        test test-all test-ci lint lint-fix pipeline up down clean help
+        test test-all test-ci lint lint-fix pipeline ci up down clean help
 
 # ── Environment ───────────────────────────────────────────────────────────────
 setup:
@@ -90,11 +90,17 @@ lint-fix:
 	cd dbt && uv run sqlfluff fix --dialect snowflake models/
 
 # ── Pipeline (end-to-end local run) ──────────────────────────────────────────
-pipeline:
+pipeline:  ## Full local pipeline: seed → bronze → dbt build
 	$(MAKE) seed
-	$(MAKE) ingest
+	$(MAKE) bronze-reset
 	$(MAKE) dbt-build
 	@echo "Pipeline complete."
+
+ci:  ## Replicate CI locally: lint → all tests → dbt build (mirrors GitHub Actions)
+	$(MAKE) lint
+	$(MAKE) test-all
+	$(MAKE) dbt-build
+	@echo "Local CI passed."
 
 # ── Airflow (Phase 5) ─────────────────────────────────────────────────────────
 AIRFLOW_COMPOSE = docker compose -f docker/airflow/docker-compose.yml
@@ -167,7 +173,8 @@ help:
 	@echo "  make test-all       Run all tests incl. integration smoke test"
 	@echo "  make lint           Check code style (ruff, black, sqlfluff)"
 	@echo "  make lint-fix       Auto-fix code style issues"
-	@echo "  make pipeline       Full end-to-end local run"
+	@echo "  make pipeline       Full local pipeline: seed → bronze → dbt build"
+	@echo "  make ci             Replicate CI locally (lint + all tests + dbt)"
 	@echo "  make up             Start Docker Compose stack"
 	@echo "  make down           Stop Docker Compose stack"
 	@echo "  make clean          Remove generated artifacts and caches"
