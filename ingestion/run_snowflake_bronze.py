@@ -53,7 +53,11 @@ def _split_statements(sql: str) -> list[str]:
     statements = []
     for part in raw_parts:
         # Remove pure-comment and blank lines to check if anything is left
-        lines = [l for l in part.splitlines() if l.strip() and not l.strip().startswith("--")]
+        lines = [
+            ln
+            for ln in part.splitlines()
+            if ln.strip() and not ln.strip().startswith("--")
+        ]
         if lines:
             statements.append(part.strip())
     return statements

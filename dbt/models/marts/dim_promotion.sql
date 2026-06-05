@@ -1,4 +1,4 @@
-select
+SELECT
     promotion_key,
     promotion_id,
     promotion_name,
@@ -8,13 +8,12 @@ select
     end_date,
     is_sitewide,
 
-    promotion_id = 'NONE'   as is_no_promotion,
+    promotion_id = 'NONE' AS is_no_promotion,
 
     -- Duration in days; NULL for the NONE sentinel
-    case
-        when start_date is not null and end_date is not null
-            then datediff('day', start_date, end_date) + 1
-        else null
-    end                     as duration_days
+    CASE
+        WHEN start_date IS NOT null AND end_date IS NOT null
+            THEN datediff('day', start_date, end_date) + 1
+    END AS duration_days
 
-from {{ ref('stg_bronze__dim_promotion') }}
+FROM {{ ref('stg_bronze__dim_promotion') }}

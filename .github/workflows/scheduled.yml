@@ -170,3 +170,26 @@ jobs:
           name: elementary-report-${{ github.run_id }}
           path: data/elementary_report.html
           retention-days: 30
+
+      # ── Step 8: Notify Project Tracker ────────────────────────────────────────
+      - name: Notify Project Tracker
+        if: always()
+        env:
+          TRACKER_API_URL:   ${{ secrets.TRACKER_API_URL }}
+          TRACKER_API_TOKEN: ${{ secrets.TRACKER_API_TOKEN }}
+        run: |
+          if [ -z "$TRACKER_API_URL" ] || [ -z "$TRACKER_API_TOKEN" ]; then
+            echo "Tracker secrets not configured — skipping"
+            exit 0
+          fi
+          STATUS="${{ job.status == 'success' && 'success' || 'failure' }}"
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -sf -X POST "${TRACKER_API_URL}/api/tasks/p7-t3/events" \
+            -H "x-tracker-token: ${TRACKER_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"status\":         \"${STATUS}\",
+              \"note\":           \"Scheduled pipeline run #${{ github.run_number }} on ${{ github.ref_name }}: ${STATUS}\",
+              \"artifactLink\":   \"${RUN_URL}\",
+              \"idempotencyKey\": \"gh-scheduled-${{ github.run_id }}\"
+            }" || echo "Tracker notification failed (non-fatal)"

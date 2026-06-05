@@ -4,23 +4,25 @@
 --   color:    kept as-is; ~2 % nulls are intentional and valid for silver.
 -- Deduplication: picks the latest bronze load version per product_key (surrogate).
 
-with source as (
-    select * from {{ source('bronze', 'dim_product') }}
+WITH source AS (
+    SELECT * FROM {{ source('bronze', 'dim_product') }}
 ),
 
-deduped as (
-    select *
-    from source
-    qualify row_number() over (partition by product_key order by _load_timestamp desc) = 1
+deduped AS (
+    SELECT *
+    FROM source
+    QUALIFY
+        row_number()
+            OVER (PARTITION BY product_key ORDER BY _load_timestamp DESC)
+        = 1
 ),
 
-cleaned as (
-    select
+cleaned AS (
+    SELECT
         product_key,
         product_id,
         sku,
         product_name,
-        upper(left(lower(category), 1)) || lower(substring(category, 2)) as category,
         subcategory,
         brand,
         color,
@@ -30,11 +32,13 @@ cleaned as (
         retail_price,
         margin_pct,
         is_current,
+        cast(effective_date AS date) AS effective_date,
         -- Pyarrow stores all-null date columns as `null` type; DuckDB then reads
         -- them as INTEGER.  Explicit CASTs make the type DATE regardless of volume.
-        cast(effective_date as date)            as effective_date,
-        try_cast(expiry_date as date)           as expiry_date
-    from deduped
+        upper(left(lower(category), 1))
+        || lower(substring(category, 2)) AS category,
+        try_cast(expiry_date AS date) AS expiry_date
+    FROM deduped
 )
 
-select * from cleaned
+SELECT * FROM cleaned

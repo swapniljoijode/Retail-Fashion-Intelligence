@@ -4,18 +4,20 @@
 --               Rows where cast fails (non-numeric strings) are excluded.
 -- Deduplication: ~0.8 % duplicate rows injected; QUALIFY removes them.
 
-with source as (
-    select * from {{ source('bronze', 'fact_sales') }}
+WITH source AS (
+    SELECT * FROM {{ source('bronze', 'fact_sales') }}
 ),
 
-deduped as (
-    select *
-    from source
-    qualify row_number() over (partition by sale_key order by _load_timestamp desc) = 1
+deduped AS (
+    SELECT *
+    FROM source
+    QUALIFY
+        row_number() OVER (PARTITION BY sale_key ORDER BY _load_timestamp DESC)
+        = 1
 ),
 
-cleaned as (
-    select
+cleaned AS (
+    SELECT
         sale_key,
         order_id,
         order_line_id,
@@ -25,16 +27,16 @@ cleaned as (
         customer_id,
         channel_id,
         promotion_id,
-        try_cast(units_sold as integer)     as units_sold,
         unit_retail_price,
         gross_revenue,
         discount_amount,
         net_revenue,
         unit_cost,
         cogs,
-        gross_margin
-    from deduped
-    where try_cast(units_sold as integer) is not null
+        gross_margin,
+        try_cast(units_sold AS integer) AS units_sold
+    FROM deduped
+    WHERE try_cast(units_sold AS integer) IS NOT null
 )
 
-select * from cleaned
+SELECT * FROM cleaned

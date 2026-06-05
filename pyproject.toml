@@ -11,6 +11,9 @@ dependencies = [
     "pyarrow>=15.0.0",
     # Cloud storage
     "boto3>=1.34.0",
+    # Tracker sync and HTTP
+    "requests>=2.32.0",
+    "pyyaml>=6.0.0",
     # Warehouse shadow — DuckDB bronze layer and CI testing
     "duckdb>=0.10.0",
     # Config and secrets

@@ -1,4 +1,4 @@
-select
+SELECT
     customer_key,
     customer_id,
     customer_segment,
@@ -11,7 +11,7 @@ select
     effective_date,
     expiry_date,
 
-    count(*) over (partition by customer_id)     as version_count,
-    count(*) over (partition by customer_id) > 1 as had_segment_change
+    count(*) OVER (PARTITION BY customer_id) AS version_count,
+    count(*) OVER (PARTITION BY customer_id) > 1 AS had_segment_change
 
-from {{ ref('stg_bronze__dim_customer') }}
+FROM {{ ref('stg_bronze__dim_customer') }}

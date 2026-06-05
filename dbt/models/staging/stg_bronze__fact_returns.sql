@@ -1,16 +1,19 @@
 -- Deduplication: ~0.5 % duplicate rows injected by dirtiness module.
 
-with source as (
-    select * from {{ source('bronze', 'fact_returns') }}
+WITH source AS (
+    SELECT * FROM {{ source('bronze', 'fact_returns') }}
 ),
 
-deduped as (
-    select *
-    from source
-    qualify row_number() over (partition by return_key order by _load_timestamp desc) = 1
+deduped AS (
+    SELECT *
+    FROM source
+    QUALIFY
+        row_number()
+            OVER (PARTITION BY return_key ORDER BY _load_timestamp DESC)
+        = 1
 )
 
-select
+SELECT
     return_key,
     return_id,
     return_line_id,
@@ -25,4 +28,4 @@ select
     refund_value,
     return_reason
 
-from deduped
+FROM deduped

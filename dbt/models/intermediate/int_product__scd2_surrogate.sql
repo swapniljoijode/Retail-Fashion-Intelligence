@@ -11,10 +11,10 @@
 --   - SCD products have an expired row (expiry_date set) and a current row
 --     (expiry_date = NULL), so exactly one row matches any given date.
 
-select
+SELECT
     product_key,
     product_id,
     effective_date,
     expiry_date
 
-from {{ ref('stg_bronze__dim_product') }}
+FROM {{ ref('stg_bronze__dim_product') }}

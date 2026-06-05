@@ -3,17 +3,20 @@
 --   city:   ~4 % null (dirtiness module)
 -- These represent customers with unknown geography and are valid silver data.
 
-with source as (
-    select * from {{ source('bronze', 'dim_customer') }}
+WITH source AS (
+    SELECT * FROM {{ source('bronze', 'dim_customer') }}
 ),
 
-deduped as (
-    select *
-    from source
-    qualify row_number() over (partition by customer_key order by _load_timestamp desc) = 1
+deduped AS (
+    SELECT *
+    FROM source
+    QUALIFY
+        row_number()
+            OVER (PARTITION BY customer_key ORDER BY _load_timestamp DESC)
+        = 1
 )
 
-select
+SELECT
     customer_key,
     customer_id,
     customer_segment,
@@ -21,9 +24,9 @@ select
     region,
     city,
     acquisition_channel,
-    cast(first_purchase_date as date)           as first_purchase_date,
+    cast(first_purchase_date AS date) AS first_purchase_date,
     is_current,
-    cast(effective_date as date)                as effective_date,
-    try_cast(expiry_date as date)               as expiry_date
+    cast(effective_date AS date) AS effective_date,
+    try_cast(expiry_date AS date) AS expiry_date
 
-from deduped
+FROM deduped

@@ -1,42 +1,49 @@
 -- Grain: one row per return line.
 -- Resolves product and customer surrogate keys at the return_date.
 
-with stg_ret as (
-    select * from {{ ref('stg_bronze__fact_returns') }}
+WITH stg_ret AS (
+    SELECT * FROM {{ ref('stg_bronze__fact_returns') }}
 ),
 
-dim_product as (
-    select product_key, product_id, effective_date, expiry_date
-    from {{ ref('int_product__scd2_surrogate') }}
+dim_product AS (
+    SELECT
+        product_key,
+        product_id,
+        effective_date,
+        expiry_date
+    FROM {{ ref('int_product__scd2_surrogate') }}
 ),
 
-dim_customer as (
-    select customer_key, customer_id, effective_date, expiry_date
-    from {{ ref('int_customer__scd2_surrogate') }}
+dim_customer AS (
+    SELECT
+        customer_key,
+        customer_id,
+        effective_date,
+        expiry_date
+    FROM {{ ref('int_customer__scd2_surrogate') }}
 ),
 
-dim_store as (
-    select store_key, store_id
-    from {{ ref('stg_bronze__dim_store') }}
+dim_store AS (
+    SELECT
+        store_key,
+        store_id
+    FROM {{ ref('stg_bronze__dim_store') }}
 ),
 
-dim_channel as (
-    select channel_key, channel_id
-    from {{ ref('stg_bronze__dim_channel') }}
+dim_channel AS (
+    SELECT
+        channel_key,
+        channel_id
+    FROM {{ ref('stg_bronze__dim_channel') }}
 )
 
-select
+SELECT
     r.return_key,
     r.return_id,
     r.return_line_id,
     r.original_order_id,
     r.return_date,
     r.original_sale_date,
-
-    coalesce(p.product_key,  -1)    as product_key,
-    coalesce(st.store_key,   -1)    as store_key,
-    coalesce(c.customer_key, -1)    as customer_key,
-    coalesce(ch.channel_key, -1)    as channel_key,
 
     r.product_id,
     r.store_id,
@@ -45,22 +52,29 @@ select
 
     r.units_returned,
     r.refund_value,
-    r.return_reason
+    r.return_reason,
+    coalesce(p.product_key, -1) AS product_key,
 
-from stg_ret r
+    coalesce(st.store_key, -1) AS store_key,
+    coalesce(c.customer_key, -1) AS customer_key,
+    coalesce(ch.channel_key, -1) AS channel_key
 
-left join dim_product p
-    on  r.product_id    = p.product_id
-    and r.return_date  >= p.effective_date
-    and (r.return_date <= p.expiry_date or p.expiry_date is null)
+FROM stg_ret AS r
 
-left join dim_store st
-    on r.store_id = st.store_id
+LEFT JOIN dim_product AS p
+    ON
+        r.product_id = p.product_id
+        AND r.return_date >= p.effective_date
+        AND (r.return_date <= p.expiry_date OR p.expiry_date IS null)
 
-left join dim_customer c
-    on  r.customer_id   = c.customer_id
-    and r.return_date  >= c.effective_date
-    and (r.return_date <= c.expiry_date or c.expiry_date is null)
+LEFT JOIN dim_store AS st
+    ON r.store_id = st.store_id
 
-left join dim_channel ch
-    on r.channel_id = ch.channel_id
+LEFT JOIN dim_customer AS c
+    ON
+        r.customer_id = c.customer_id
+        AND r.return_date >= c.effective_date
+        AND (r.return_date <= c.expiry_date OR c.expiry_date IS null)
+
+LEFT JOIN dim_channel AS ch
+    ON r.channel_id = ch.channel_id

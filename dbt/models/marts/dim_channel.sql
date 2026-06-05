@@ -1,9 +1,9 @@
-select
+SELECT
     channel_key,
     channel_id,
     channel_name,
     channel_type,
     platform,
-    channel_type in ('digital', 'marketplace') as is_digital
+    channel_type IN ('digital', 'marketplace') AS is_digital
 
-from {{ ref('stg_bronze__dim_channel') }}
+FROM {{ ref('stg_bronze__dim_channel') }}
