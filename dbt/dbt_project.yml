@@ -30,11 +30,15 @@ models:
       +docs:
         show: true
 
-# ── Elementary observability hooks ───────────────────────────────────────────
-# Uploads dbt artifacts (manifest, run_results, sources) to the Elementary
-# schema after every dbt run so edr can surface test results and freshness.
-on-run-end:
-  - "{{ elementary.upload_dbt_artifacts_v2() }}"
+# ── Elementary observability ─────────────────────────────────────────────────
+# Elementary's incremental models (data_monitoring_metrics, dbt_models,
+# dbt_run_results, etc.) run as part of dbt build and populate the Elementary
+# schema automatically — no on-run-end hook needed.
+#
+# Note: upload_dbt_artifacts_v2() in on-run-end is incompatible with dbt 1.11
+# because Elementary injects an 'elementary' dict var that shadows the package
+# namespace in Jinja, causing "dict object has no attribute" errors.
+# Run `edr report` directly after dbt build to generate the observability HTML.
 
 # ── Variables ─────────────────────────────────────────────────────────────────
 vars:
