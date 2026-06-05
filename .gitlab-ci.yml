@@ -170,22 +170,22 @@ notify:tracker:
   image: curlimages/curl:latest
   script:
     - |
-      if [ -z "$TRACKER_API_URL" ] || [ -z "$TRACKER_API_KEY" ]; then
-        echo "TRACKER_API_URL or TRACKER_API_KEY not set — skipping"
+      if [ -z "$TRACKER_API_URL" ] || [ -z "$TRACKER_API_TOKEN" ]; then
+        echo "TRACKER_API_URL or TRACKER_API_TOKEN not set — skipping"
         exit 0
       fi
       STATUS="success"
-      if [ "$CI_JOB_STATUS" != "success" ]; then STATUS="failed"; fi
-      curl -sf -X POST "$TRACKER_API_URL/api/pipeline-status" \
-        -H "Authorization: Bearer $TRACKER_API_KEY" \
+      if [ "$CI_JOB_STATUS" != "success" ]; then STATUS="failure"; fi
+      TASK_ID="p7-t3"
+      NOTE="GitLab CI pipeline ${CI_PIPELINE_ID} on ${CI_COMMIT_REF_NAME} (${CI_COMMIT_SHORT_SHA}): ${STATUS}"
+      curl -sf -X POST "${TRACKER_API_URL}/api/tasks/${TASK_ID}/events" \
+        -H "x-tracker-token: $TRACKER_API_TOKEN" \
         -H "Content-Type: application/json" \
         --data-raw "{
-          \"project\":      \"fashion-retail-intelligence\",
-          \"pipeline_id\":  \"$CI_PIPELINE_ID\",
-          \"ref\":          \"$CI_COMMIT_REF_NAME\",
-          \"commit_sha\":   \"$CI_COMMIT_SHORT_SHA\",
-          \"status\":       \"$STATUS\",
-          \"pipeline_url\": \"$CI_PIPELINE_URL\"
+          \"status\":         \"${STATUS}\",
+          \"note\":           \"${NOTE}\",
+          \"artifactLink\":   \"${CI_PIPELINE_URL}\",
+          \"idempotencyKey\": \"gitlab-${CI_PIPELINE_ID}\"
         }" || echo "Tracker notification failed (non-fatal)"
   when: always
   rules:
