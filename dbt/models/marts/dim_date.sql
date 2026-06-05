@@ -1,4 +1,4 @@
-select
+SELECT
     date_key,
     date,
     day_of_week,
@@ -18,14 +18,13 @@ select
     trading_day_of_week,
 
     -- Derived convenience flags
-    case when is_weekend = false and is_public_holiday = false
-        then true else false
-    end                                         as is_trading_day,
+    coalesce(is_weekend = false AND is_public_holiday = false,
+    FALSE) AS is_trading_day,
 
     -- Composite period keys for pre-aggregated queries
-    cast(year as varchar) || '-Q'
-        || cast(quarter_number as varchar)      as year_quarter_label,
-    year * 100 + quarter_number                 as year_quarter_key,
-    year * 100 + month_number                   as year_month_key
+    cast(year AS varchar) || '-Q'
+    || cast(quarter_number AS varchar) AS year_quarter_label,
+    year * 100 + quarter_number AS year_quarter_key,
+    year * 100 + month_number AS year_month_key
 
-from {{ ref('stg_bronze__dim_date') }}
+FROM {{ ref('stg_bronze__dim_date') }}

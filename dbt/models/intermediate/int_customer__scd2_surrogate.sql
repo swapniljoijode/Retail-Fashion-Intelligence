@@ -2,10 +2,10 @@
 -- event_date → customer_key via an SCD Type 2 date-range join.
 -- See int_product__scd2_surrogate for the join pattern.
 
-select
+SELECT
     customer_key,
     customer_id,
     effective_date,
     expiry_date
 
-from {{ ref('stg_bronze__dim_customer') }}
+FROM {{ ref('stg_bronze__dim_customer') }}

@@ -1,18 +1,21 @@
-with source as (
-    select * from {{ source('bronze', 'dim_channel') }}
+WITH source AS (
+    SELECT * FROM {{ source('bronze', 'dim_channel') }}
 ),
 
-deduped as (
-    select *
-    from source
-    qualify row_number() over (partition by channel_key order by _load_timestamp desc) = 1
+deduped AS (
+    SELECT *
+    FROM source
+    QUALIFY
+        row_number()
+            OVER (PARTITION BY channel_key ORDER BY _load_timestamp DESC)
+        = 1
 )
 
-select
+SELECT
     channel_key,
     channel_id,
     channel_name,
     channel_type,
     platform
 
-from deduped
+FROM deduped

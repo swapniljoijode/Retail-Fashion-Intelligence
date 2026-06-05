@@ -1,16 +1,18 @@
-with source as (
-    select * from {{ source('bronze', 'dim_date') }}
+WITH source AS (
+    SELECT * FROM {{ source('bronze', 'dim_date') }}
 ),
 
-deduped as (
-    select *
-    from source
-    qualify row_number() over (partition by date_key order by _load_timestamp desc) = 1
+deduped AS (
+    SELECT *
+    FROM source
+    QUALIFY
+        row_number() OVER (PARTITION BY date_key ORDER BY _load_timestamp DESC)
+        = 1
 )
 
-select
+SELECT
     date_key,
-    cast(date as date)                          as date,
+    cast(date AS date) AS date,
     day_of_week,
     day_name,
     day_of_month,
@@ -27,6 +29,6 @@ select
     holiday_name,
     -- pandas .where() with other=None produces float64 (NaN for non-trading days).
     -- CAST converts NaN → NULL which is the correct representation.
-    cast(trading_day_of_week as integer)        as trading_day_of_week
+    cast(trading_day_of_week AS integer) AS trading_day_of_week
 
-from deduped
+FROM deduped

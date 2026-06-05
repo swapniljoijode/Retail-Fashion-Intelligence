@@ -1,17 +1,19 @@
 -- customer_id: nullable — ~30 % of sessions are anonymous.
 -- product_id:  nullable — only populated when a product was viewed.
 
-with source as (
-    select * from {{ source('bronze', 'fact_web_events') }}
+WITH source AS (
+    SELECT * FROM {{ source('bronze', 'fact_web_events') }}
 ),
 
-deduped as (
-    select *
-    from source
-    qualify row_number() over (partition by event_key order by _load_timestamp desc) = 1
+deduped AS (
+    SELECT *
+    FROM source
+    QUALIFY
+        row_number() OVER (PARTITION BY event_key ORDER BY _load_timestamp DESC)
+        = 1
 )
 
-select
+SELECT
     event_key,
     session_id,
     event_date,
@@ -22,4 +24,4 @@ select
     product_id,
     event_type
 
-from deduped
+FROM deduped
