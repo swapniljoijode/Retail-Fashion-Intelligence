@@ -25,18 +25,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_URL   = os.environ.get("TRACKER_API_URL", "").rstrip("/")
-TOKEN      = os.environ.get("TRACKER_API_TOKEN", "")
-REPO_URL   = "https://github.com/swapniljoijode/Retail-Fashion-Intelligence"
+BASE_URL = os.environ.get("TRACKER_API_URL", "").rstrip("/")
+TOKEN = os.environ.get("TRACKER_API_TOKEN", "")
+REPO_URL = "https://github.com/swapniljoijode/Retail-Fashion-Intelligence"
 PROJECT_ID = "fashion-retail-intelligence"
 
 # tracker_migration.yml status → tracker API status
 STATUS_MAP = {
-    "completed":   "success",
+    "completed": "success",
     "in_progress": "ongoing",
-    "failed":      "failure",
-    "skipped":     "success",
-    "pending":     "ongoing",
+    "failed": "failure",
+    "skipped": "success",
+    "pending": "ongoing",
 }
 
 # Commit links for each phase — used as artifactLinks on completion events
@@ -57,7 +57,7 @@ PHASE_COMMITS = {
 def _headers() -> dict:
     return {
         "x-tracker-token": TOKEN,
-        "Content-Type":    "application/json",
+        "Content-Type": "application/json",
     }
 
 
@@ -84,8 +84,8 @@ def step1_sync(migration: dict) -> bool:
         "project": PROJECT_ID,
         "phases": [
             {
-                "id":    phase["id"],
-                "name":  phase["name"],
+                "id": phase["id"],
+                "name": phase["name"],
                 "tasks": [
                     {"id": task["id"], "title": task["name"]}
                     for task in phase.get("tasks", [])
@@ -99,7 +99,7 @@ def step1_sync(migration: dict) -> bool:
     if r.ok:
         data = r.json()
         phases = data.get("phases", {})
-        tasks  = data.get("tasks",  {})
+        tasks = data.get("tasks", {})
         print(
             f"  OK  phases  created={phases.get('created',0)}"
             f"  updated={phases.get('updated',0)}"
@@ -118,7 +118,7 @@ def step1_sync(migration: dict) -> bool:
 def step2_post_events(migration: dict) -> None:
     """Post a success event for every completed task."""
     print("\n[2/2] Posting completion events ...")
-    today    = date.today().isoformat()
+    today = date.today().isoformat()
     ok = errors = skipped = 0
 
     for phase in migration["phases"]:
@@ -133,13 +133,13 @@ def step2_post_events(migration: dict) -> None:
 
             idempotency_key = f"{task['id']}-sync-{today}"
             body = {
-                "status":         api_status,
-                "note":           (
+                "status": api_status,
+                "note": (
                     f"{phase['name']}: {task['name']}. "
                     f"Completed as part of the full medallion build "
                     f"(Phase {phase['id'].upper()})."
                 ),
-                "artifactLink":   artifact,
+                "artifactLink": artifact,
                 "idempotencyKey": idempotency_key,
             }
 
