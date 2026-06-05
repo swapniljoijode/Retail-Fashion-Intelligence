@@ -18,8 +18,10 @@ SELECT
     trading_day_of_week,
 
     -- Derived convenience flags
-    coalesce(is_weekend = false AND is_public_holiday = false,
-    FALSE) AS is_trading_day,
+    coalesce(
+        is_weekend = false AND is_public_holiday = false,
+        false
+    ) AS is_trading_day,
 
     -- Composite period keys for pre-aggregated queries
     cast(year AS varchar) || '-Q'
