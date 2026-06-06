@@ -68,3 +68,9 @@ Thumbs.db
 # ── Airflow ───────────────────────────────────────────────────────────────────
 orchestration/logs/
 orchestration/airflow.db
+
+# ── Generated documents ───────────────────────────────────────────────────────
+# The guidebook is generated from scripts/build_guidebook.py — never commit the
+# output, only the script. ~$ files are Word's temporary lock files.
+docs/*.docx
+~$*
