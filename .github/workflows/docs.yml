@@ -122,6 +122,7 @@ jobs:
       - name: Add dbt docs to gh-pages branch
         run: |
           git fetch origin gh-pages
+          git checkout -- uv.lock 2>/dev/null || true
           git checkout gh-pages
           mkdir -p dbt-docs
           cp site/dbt-docs/index.html       dbt-docs/
