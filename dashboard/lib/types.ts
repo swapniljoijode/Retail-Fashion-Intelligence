@@ -148,6 +148,18 @@ export interface CategoryData {
   by_season: { season: string; retail_season: string; gross_revenue: number; gross_margin_pct: number; units_sold: number }[];
 }
 
+// ── Product Images ────────────────────────────────────────────────────────────
+export interface CategoryImage {
+  pexels_id:    number | null;
+  url:          string;
+  alt:          string;
+  photographer: string;
+  pexels_url:   string;
+  r2_key:       string | null;
+}
+
+export type ImagesData = Record<string, CategoryImage>;
+
 // ── Planning ──────────────────────────────────────────────────────────────────
 export interface WeeklyInventoryRow {
   year: number;

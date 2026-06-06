@@ -1,0 +1,50 @@
+{
+  "Tops": {
+    "pexels_id": 28666269,
+    "url": "https://images.pexels.com/photos/28666269/pexels-photo-28666269.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "alt": "Fashionable woman in sunglasses posed outdoors, showcasing street style.",
+    "photographer": "Guillermo Berlin",
+    "pexels_url": "https://www.pexels.com/photo/stylish-woman-posing-outdoors-in-urban-setting-28666269/",
+    "r2_key": "images/tops.jpg"
+  },
+  "Bottoms": {
+    "pexels_id": 9476335,
+    "url": "https://images.pexels.com/photos/9476335/pexels-photo-9476335.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "alt": "Two fashionable women walking outdoors with flowers and a prosthetic hand, enjoying sunny day.",
+    "photographer": "Mikhail Nilov",
+    "pexels_url": "https://www.pexels.com/photo/a-two-women-wearing-sunglasses-while-talking-9476335/",
+    "r2_key": "images/bottoms.jpg"
+  },
+  "Dresses": {
+    "pexels_id": 5314574,
+    "url": "https://images.pexels.com/photos/5314574/pexels-photo-5314574.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "alt": "Trendy young female in stylish mini dress near bushes with verdant fresh leaves on blurred background",
+    "photographer": "Jeff Denlea",
+    "pexels_url": "https://www.pexels.com/photo/young-woman-in-sunglasses-and-trendy-summer-dress-5314574/",
+    "r2_key": "images/dresses.jpg"
+  },
+  "Outerwear": {
+    "pexels_id": 5970787,
+    "url": "https://images.pexels.com/photos/5970787/pexels-photo-5970787.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "alt": "Full body of trendy female models in sunglasses wearing elegant coats and boots standing on white background in modern studio",
+    "photographer": "Pegah Sharifi",
+    "pexels_url": "https://www.pexels.com/photo/stylish-women-in-trendy-outfits-5970787/",
+    "r2_key": "images/outerwear.jpg"
+  },
+  "Footwear": {
+    "pexels_id": 27988923,
+    "url": "https://images.pexels.com/photos/27988923/pexels-photo-27988923.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "alt": "Featuring a woman in trendy silver sneakers against an elegant grey backdrop.",
+    "photographer": "Jos\u00e9 Martin Segura Benites",
+    "pexels_url": "https://www.pexels.com/photo/zapatillas-gris-27988923/",
+    "r2_key": "images/footwear.jpg"
+  },
+  "Accessories": {
+    "pexels_id": 27174573,
+    "url": "https://images.pexels.com/photos/27174573/pexels-photo-27174573.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "alt": "Luxury dark brown leather handbag with beige handles and strap, exuding fashion elegance.",
+    "photographer": "Jos\u00e9 Martin Segura Benites",
+    "pexels_url": "https://www.pexels.com/photo/bag-on-yellow-background-27174573/",
+    "r2_key": "images/accessories.jpg"
+  }
+}

@@ -1,11 +1,13 @@
-import { getCategoryData, fmtCurrency, fmtNumber, fmtPct } from "@/lib/data";
+import { getCategoryData, getImagesData, fmtCurrency, fmtNumber, fmtPct } from "@/lib/data";
 import KpiCard from "@/components/KpiCard";
 import PageHeader from "@/components/PageHeader";
 import ChartCard from "@/components/ChartCard";
+import CategoryImageCard from "@/components/CategoryImageCard";
 import HorizontalBarChart from "@/components/charts/HorizontalBarChart";
 
 export default function CategoryPage() {
-  const cat = getCategoryData();
+  const cat    = getCategoryData();
+  const images = getImagesData();
 
   const revenueData = cat.by_category.map((c) => ({
     name: c.category,
@@ -66,6 +68,25 @@ export default function CategoryPage() {
           />
         </div>
       )}
+
+      {/* Category image grid */}
+      <div className="mb-8">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--muted)" }}>
+          Category Overview
+        </p>
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+          {cat.by_category.map((c) => (
+            <CategoryImageCard
+              key={c.category}
+              category={c.category}
+              image={images[c.category]}
+              revenue={fmtCurrency(c.gross_revenue, true)}
+              margin={fmtPct(c.gross_margin_pct)}
+              units={fmtNumber(c.units_sold, true)}
+            />
+          ))}
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <ChartCard title="Revenue by Category" subtitle="Gross revenue ranking">
