@@ -91,7 +91,7 @@ def run() -> None:
         existing = json.loads(OUTPUT_JSON.read_text(encoding="utf-8"))
 
     for category, query in CATEGORY_QUERIES.items():
-        print(f"  {category:<15} → '{query}'")
+        print(f"  {category:<15} : '{query}'")
         try:
             photos = search_pexels(query)
             if not photos:
@@ -133,7 +133,7 @@ def run() -> None:
             print(f"    ERR {exc}")
 
     OUTPUT_JSON.write_text(json.dumps(existing, indent=2), encoding="utf-8")
-    print(f"\nWrote {len(existing)} entries → {OUTPUT_JSON}")
+    print(f"\nWrote {len(existing)} entries to {OUTPUT_JSON}")
     print(f"Visit the Category page on the dashboard to see the thumbnails.")
 
 
