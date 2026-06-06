@@ -7,6 +7,7 @@ import type {
   CategoryData,
   PlanningData,
   PlacementData,
+  ImagesData,
 } from "./types";
 
 function readJson<T>(name: string): T {
@@ -20,6 +21,7 @@ export const getMarketingData = () => readJson<MarketingData>("marketing");
 export const getCategoryData  = () => readJson<CategoryData>("category");
 export const getPlanningData  = () => readJson<PlanningData>("planning");
 export const getPlacementData = () => readJson<PlacementData>("placement");
+export const getImagesData    = () => readJson<ImagesData>("images");
 
 // ── Formatting helpers ────────────────────────────────────────────────────────
 

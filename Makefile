@@ -86,7 +86,13 @@ docker-pipeline:  ## Run the full pipeline (seed → bronze → dbt) inside the 
 	docker compose -f docker/docker-compose.yml run --rm app \
 		bash -c "make seed && make bronze-reset && make dbt-build"
 
-# ── Dashboard (Phase 8) ───────────────────────────────────────────────────────
+# ── Dashboard (Phase 8 + 9) ──────────────────────────────────────────────────
+fetch-images:  ## Fetch category images from Pexels → dashboard/public/data/images.json (needs PEXELS_API_KEY)
+	uv run python -m ingestion.fetch_product_images
+
+sync-tracker:  ## Seed Project Tracker with all completed phase status events
+	uv run python -m ingestion.sync_tracker
+
 export-snapshot:  ## Export DuckDB gold marts to dashboard/public/data/*.json
 	uv run python -m ingestion.export_snapshot \
 		--db-path    data/fashion_retail.duckdb \
