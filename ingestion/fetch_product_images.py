@@ -95,7 +95,7 @@ def run() -> None:
         try:
             photos = search_pexels(query)
             if not photos:
-                print(f"    no results — skipping")
+                print("    no results — skipping")
                 continue
 
             photo     = photos[0]
@@ -118,7 +118,7 @@ def run() -> None:
                 )
                 print(f"    OK  R2: {r2_key}")
             else:
-                print(f"    OK  local only (R2 creds not set)")
+                print("    OK  local only (R2 creds not set)")
 
             existing[category] = {
                 "pexels_id":    photo["id"],
@@ -134,7 +134,7 @@ def run() -> None:
 
     OUTPUT_JSON.write_text(json.dumps(existing, indent=2), encoding="utf-8")
     print(f"\nWrote {len(existing)} entries to {OUTPUT_JSON}")
-    print(f"Visit the Category page on the dashboard to see the thumbnails.")
+    print("Visit the Category page on the dashboard to see the thumbnails.")
 
 
 if __name__ == "__main__":
