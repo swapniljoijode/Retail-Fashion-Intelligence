@@ -25,7 +25,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_URL = os.environ.get("TRACKER_API_URL", "").rstrip("/")
-TOKEN    = os.environ.get("TRACKER_API_TOKEN", "")
+TOKEN = os.environ.get("TRACKER_API_TOKEN", "")
 REPO_URL = "https://github.com/swapniljoijode/Retail-Fashion-Intelligence"
 
 # Commit links for each phase — used as artifactLinks on completion events
@@ -48,9 +48,7 @@ def _headers() -> dict:
 
 
 def _post(path: str, body: dict) -> requests.Response:
-    return requests.post(
-        f"{BASE_URL}{path}", headers=_headers(), json=body, timeout=20
-    )
+    return requests.post(f"{BASE_URL}{path}", headers=_headers(), json=body, timeout=20)
 
 
 def step1_sync(data: dict) -> bool:
