@@ -180,6 +180,18 @@ export interface PlanningData {
   stockout_by_store: { store_type: string; region: string; stockout_rate: number; avg_units_on_hand: number }[];
 }
 
+// ── Product Images ────────────────────────────────────────────────────────────
+export interface CategoryImage {
+  pexels_id:    number | null;
+  url:          string;
+  alt:          string;
+  photographer: string;
+  pexels_url:   string;
+  r2_key:       string | null;
+}
+
+export type ImagesData = Record<string, CategoryImage>;
+
 // ── Placement ─────────────────────────────────────────────────────────────────
 export interface RegionRow {
   region: string;

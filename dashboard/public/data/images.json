@@ -1,0 +1,50 @@
+{
+  "Tops": {
+    "pexels_id": 1536619,
+    "url": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop&auto=format",
+    "alt": "Fashion tops and knitwear",
+    "photographer": "Unsplash",
+    "pexels_url": "https://unsplash.com",
+    "r2_key": null
+  },
+  "Bottoms": {
+    "pexels_id": 1598507,
+    "url": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=300&fit=crop&auto=format",
+    "alt": "Jeans and trousers",
+    "photographer": "Unsplash",
+    "pexels_url": "https://unsplash.com",
+    "r2_key": null
+  },
+  "Dresses": {
+    "pexels_id": 1536620,
+    "url": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=300&h=300&fit=crop&auto=format",
+    "alt": "Women's dresses",
+    "photographer": "Unsplash",
+    "pexels_url": "https://unsplash.com",
+    "r2_key": null
+  },
+  "Outerwear": {
+    "pexels_id": 1457983,
+    "url": "https://images.unsplash.com/photo-1548624313-0396c75e4b1a?w=300&h=300&fit=crop&auto=format",
+    "alt": "Jackets and coats",
+    "photographer": "Unsplash",
+    "pexels_url": "https://unsplash.com",
+    "r2_key": null
+  },
+  "Footwear": {
+    "pexels_id": 1542085,
+    "url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&auto=format",
+    "alt": "Fashion footwear",
+    "photographer": "Unsplash",
+    "pexels_url": "https://unsplash.com",
+    "r2_key": null
+  },
+  "Accessories": {
+    "pexels_id": 1152077,
+    "url": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300&h=300&fit=crop&auto=format",
+    "alt": "Fashion accessories and bags",
+    "photographer": "Unsplash",
+    "pexels_url": "https://unsplash.com",
+    "r2_key": null
+  }
+}
