@@ -30,21 +30,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY", "")
-R2_ACCOUNT_ID  = os.environ.get("R2_ACCOUNT_ID", "")
-R2_ACCESS_KEY  = os.environ.get("R2_ACCESS_KEY_ID", "")
-R2_SECRET      = os.environ.get("R2_SECRET_ACCESS_KEY", "")
-R2_BUCKET      = os.environ.get("R2_SERVED_BUCKET", "fashion-retail-served")
+R2_ACCOUNT_ID = os.environ.get("R2_ACCOUNT_ID", "")
+R2_ACCESS_KEY = os.environ.get("R2_ACCESS_KEY_ID", "")
+R2_SECRET = os.environ.get("R2_SECRET_ACCESS_KEY", "")
+R2_BUCKET = os.environ.get("R2_SERVED_BUCKET", "fashion-retail-served")
 
 OUTPUT_JSON = Path("dashboard/public/data/images.json")
-LOCAL_DIR   = Path("data/product_images")
+LOCAL_DIR = Path("data/product_images")
 
 CATEGORY_QUERIES: dict[str, str] = {
-    "Tops":       "women fashion top blouse clothing",
-    "Bottoms":    "women jeans trousers fashion",
-    "Dresses":    "women dress fashion elegant",
-    "Outerwear":  "women jacket coat fashion outerwear",
-    "Footwear":   "fashion shoes heels sneakers",
-    "Accessories":"fashion handbag accessories leather",
+    "Tops": "women fashion top blouse clothing",
+    "Bottoms": "women jeans trousers fashion",
+    "Dresses": "women dress fashion elegant",
+    "Outerwear": "women jacket coat fashion outerwear",
+    "Footwear": "fashion shoes heels sneakers",
+    "Accessories": "fashion handbag accessories leather",
 }
 
 
@@ -69,7 +69,12 @@ def search_pexels(query: str) -> list[dict]:
     r = requests.get(
         "https://api.pexels.com/v1/search",
         headers={"Authorization": PEXELS_API_KEY},
-        params={"query": query, "per_page": 3, "size": "medium", "orientation": "square"},
+        params={
+            "query": query,
+            "per_page": 3,
+            "size": "medium",
+            "orientation": "square",
+        },
         timeout=15,
     )
     r.raise_for_status()
@@ -98,7 +103,7 @@ def run() -> None:
                 print("    no results — skipping")
                 continue
 
-            photo     = photos[0]
+            photo = photos[0]
             thumb_url = photo["src"]["medium"]
 
             # Download thumbnail
@@ -121,12 +126,12 @@ def run() -> None:
                 print("    OK  local only (R2 creds not set)")
 
             existing[category] = {
-                "pexels_id":    photo["id"],
-                "url":          thumb_url,
-                "alt":          photo.get("alt", f"{category} fashion"),
+                "pexels_id": photo["id"],
+                "url": thumb_url,
+                "alt": photo.get("alt", f"{category} fashion"),
                 "photographer": photo["photographer"],
-                "pexels_url":   photo["url"],
-                "r2_key":       r2_key,
+                "pexels_url": photo["url"],
+                "r2_key": r2_key,
             }
 
         except Exception as exc:
