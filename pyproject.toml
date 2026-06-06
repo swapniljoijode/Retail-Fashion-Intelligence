@@ -44,6 +44,8 @@ dev = [
 docs = [
     "mkdocs-material>=9.5.0",
     "mkdocs-minify-plugin>=0.8.0",
+    # Generates the Theory Companion v2 guidebook (.docx) via scripts/build_guidebook.py
+    "python-docx>=1.1.0",
 ]
 
 [build-system]
